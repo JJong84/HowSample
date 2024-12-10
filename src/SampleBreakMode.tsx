@@ -1,7 +1,7 @@
 import { Line, SampleData, SampleLine, UploadedMusic } from "./Type";
 import MusicInput from "./MusicInput";
 import WaveForm from "./Waveform";
-import SampleBreakResult from "./SampleBreakResult";
+// import SampleBreakResult from "./SampleBreakResult";
 import "./style/sample-break.css";
 import { Button } from "@mui/material";
 import { KanYe } from "./MockData";
