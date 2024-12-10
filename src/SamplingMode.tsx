@@ -25,7 +25,7 @@ const SamplingMode = ({selectedFiles, setSelectedFiles, sources, setSources}: Sa
     const [draggedAudioSource, setDraggedAudioSource] = useState<SampleData | null>(null);
     const [startedTime, setStartedTime] = useState<number | null>(null);
 
-    const [playingNodes, setPlayingNodes] = useState<(AudioBufferSourceNode | AudioWorkletNode)[]>([]);
+    const [, setPlayingNodes] = useState<(AudioBufferSourceNode | AudioWorkletNode)[]>([]);
 
     const handleAddLineClick = () => {
         setLines(prev => [...prev, {

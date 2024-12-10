@@ -43,15 +43,6 @@ export const AddSourceModalProvider: React.FC<{ children: React.ReactNode }> = (
     setModalOpen(false);
   };
 
-  const apply = () => {
-    if (isEdit) {
-      // append
-      return;
-    }
-    // modify original one
-    setModalOpen(false);
-  }
-
   return (
     <AddSourceModalContext.Provider
       value={{

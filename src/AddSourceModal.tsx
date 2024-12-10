@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { SampleData, WaveformHandle } from "./Type";
 import WaveForm from "./Waveform_Modal";
 import { useAddSourceModal } from "./useAddSourceModal";
@@ -10,7 +10,7 @@ interface AddSourceModalProps {
   setSources: React.Dispatch<React.SetStateAction<SampleData[]>>;
 }
 
-const AddSourceModal = ({ sources, setSources }: AddSourceModalProps) => {
+const AddSourceModal = ({ setSources }: AddSourceModalProps) => {
   const { isModalOpen, speed, pitch, setSpeed, setPitch, source, closeModal, isEdit, startPoint, endPoint } =
     useAddSourceModal();
   const waveFormRef = useRef<WaveformHandle>(null);

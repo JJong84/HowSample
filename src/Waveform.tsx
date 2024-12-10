@@ -35,7 +35,8 @@ const WaveForm = forwardRef<WaveformHandle, Props>(({data, isExpandable, pixelPe
         stop,
         getNode: () => soundSource,
         changeSpeed,
-        changePitch
+        changePitch,
+        playStop,
     }));
 
     useEffect(() => {
@@ -52,6 +53,16 @@ const WaveForm = forwardRef<WaveformHandle, Props>(({data, isExpandable, pixelPe
 
         draw();
     }, [data]);
+
+    const playStop = () => {
+        if (soundSource) {
+            stop();
+            setSoundSource(null);
+        } else {
+            const source = start();
+            setSoundSource(source);
+        }
+    }
 
     const draw = () => {
         if (!waveformRef.current) {

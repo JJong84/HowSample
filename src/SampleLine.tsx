@@ -19,8 +19,6 @@ interface SampleLineProps {
 const SamplingLine = ({id, sources, line, onDragOver, onDrop, totalTime, pixelPerSecond}: SampleLineProps) => {
     const lineRef = useRef<HTMLDivElement>(null);
 
-    const rect = lineRef.current?.getBoundingClientRect();
-
     const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
         if (!lineRef.current) return;
 
