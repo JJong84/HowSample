@@ -40,19 +40,17 @@ interface WaveformHandle {
     getNode: () => AudioBufferSourceNode | null | undefined;
 }
 
-interface BreakResponse {
-    data: {
-        speed: number;
-        pitch: number;
-        target: {
-            start: number;
-            end: number;
-        }
-        original: {
-            start: number;
-            end: number;
-        }
-    }[];
+interface SampleRange {
+    sampleId?: UUIDTypes;
+    start: number;
+    end: number;
 }
 
-export type {SampleData, UploadedMusic, UploadedMusicType, SampleLine, Line, WaveformHandle, BreakResponse}
+type BreakResponse = {
+    speed: number;
+    pitch: number;
+    target: SampleRange;
+    original: SampleRange;
+}[];
+
+export type {SampleRange, SampleData, UploadedMusic, UploadedMusicType, SampleLine, Line, WaveformHandle, BreakResponse}
