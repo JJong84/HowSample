@@ -83,7 +83,7 @@ const AddSourceModal = ({ setSources }: AddSourceModalProps) => {
   return (
     <Dialog open={isModalOpen} onClose={close} maxWidth="sm" fullWidth>
       <DialogTitle>Adjust Waveform</DialogTitle>
-      <DialogContent>
+      <DialogContent sx={{overflow: "hidden"}}>
         <Box
           sx={{
             display: "flex",
@@ -123,7 +123,8 @@ const AddSourceModal = ({ setSources }: AddSourceModalProps) => {
             height: "100px",
             border: "1px solid black",
             marginBottom: "20px",
-            overflow: "auto",
+            overflowY: "hidden",
+            overflowX: "auto",
             position: "relative",
           }}
         >

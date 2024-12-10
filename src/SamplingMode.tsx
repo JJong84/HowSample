@@ -15,17 +15,25 @@ interface SamplingModeProps {
     setSelectedFiles: React.Dispatch<React.SetStateAction<UploadedMusic[]>>;
     sources: SampleData[];
     setSources: React.Dispatch<React.SetStateAction<SampleData[]>>;
+    lines: Line[];
+    setLines: React.Dispatch<React.SetStateAction<Line[]>>;
 }
 
-const SamplingMode = ({selectedFiles, setSelectedFiles, sources, setSources}: SamplingModeProps) => {
+const SamplingMode = ({selectedFiles, setSelectedFiles, sources, setSources, lines, setLines}: SamplingModeProps) => {
     const {audioContext, createPitchShiftNode} = useAudioContext();
+    const {isModalOpen} = useAddSourceModal();
 
     const {openModal} = useAddSourceModal();
-    const [lines, setLines] = useState<Line[]>([{id: v4(), sampleLines: []}]);
     const [draggedAudioSource, setDraggedAudioSource] = useState<SampleData | null>(null);
     const [startedTime, setStartedTime] = useState<number | null>(null);
 
-    const [, setPlayingNodes] = useState<(AudioBufferSourceNode | AudioWorkletNode)[]>([]);
+    const [, setPlayingNodes] = useState<(AudioBufferSourceNode)[]>([]);
+
+    useEffect(() => {
+        if (isModalOpen) {
+            intialize();
+        }
+    }, [isModalOpen]);
 
     const handleAddLineClick = () => {
         setLines(prev => [...prev, {
@@ -33,6 +41,8 @@ const SamplingMode = ({selectedFiles, setSelectedFiles, sources, setSources}: Sa
             sampleLines: [],
         }]);
     }
+
+    console.log(lines);
 
     const handleSourceClick = (source: SampleData) => {
         openModal(source, false);
@@ -67,16 +77,23 @@ const SamplingMode = ({selectedFiles, setSelectedFiles, sources, setSources}: Sa
         setDraggedAudioSource(null);
     }
 
+    const intialize = () => {
+        setStartedTime(null);
+        setPlayingNodes((prev) => {
+            prev.forEach((node) => {
+                node.disconnect();
+            });
+            return [];
+        })
+    }
+
     const handlePlayClick = () => {
         if (startedTime) {
-            setStartedTime(null);
-            setPlayingNodes((prev) => {
-                prev.forEach((node) => {
-                    node.disconnect();
-                });
-                return [];
-            })
+            intialize();
         } else {
+            let lastSourceNode: AudioBufferSourceNode | null = null;
+            let lastSourceNodeEndTime = 0;
+
             lines.forEach((line) => {
                 line.sampleLines.forEach((sl) => {
                     const sourceNode = audioContext.createBufferSource();
@@ -102,10 +119,22 @@ const SamplingMode = ({selectedFiles, setSelectedFiles, sources, setSources}: Sa
                     sourceNode.connect(node).connect(audioContext.destination);
                     sourceNode.start(startTime, startPoint, endPoint - startPoint);
 
-                    setPlayingNodes((prev) => [...prev, sourceNode, node]);
+                    const endTime = startTime + endPoint - startPoint;
+                    if (!lastSourceNode || lastSourceNodeEndTime < endTime) {
+                        lastSourceNode = sourceNode;
+                        lastSourceNodeEndTime = endTime;
+                    }
+                    
+                    setPlayingNodes((prev) => [...prev, sourceNode]);
                 })
             });
             setStartedTime(audioContext.currentTime);
+
+            if (lastSourceNode) {
+                (lastSourceNode as AudioBufferSourceNode).addEventListener("ended", () => {
+                    intialize();
+                });
+            }
         }
     }
 
@@ -135,7 +164,15 @@ const SamplingMode = ({selectedFiles, setSelectedFiles, sources, setSources}: Sa
         };
       }, [startedTime, audioContext]);
 
+    const handleResetClick = () => {
+        intialize();
+        setLines([{id: v4(), sampleLines: []}]);
+    }
+
     return <>
+        <Button onClick={handleResetClick}>
+            Reset
+        </Button>
         <Button onClick={handlePlayClick}>
             Play
         </Button>
@@ -143,8 +180,6 @@ const SamplingMode = ({selectedFiles, setSelectedFiles, sources, setSources}: Sa
             <div
                 className="progress-line"
                 ref={progressLineRef} />
-                {/* style={{transform: `translateX(${audioContext.currentTime}px)`}} /> */}
-                {/* style={{animation: `moveLine ${TOTAL_TIME}s linear forwards`}}> */}
             {
                 lines.map((li) =>
                     <SamplingLine

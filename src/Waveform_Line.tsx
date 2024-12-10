@@ -101,7 +101,6 @@ const WaveForm = forwardRef<WaveformHandle, Props>(({data, pixelPerSecond}: Prop
     }
 
     const stop = () => {
-        pitchShiftNode?.disconnect();
         soundSource?.stop();
         soundSource?.disconnect();
     }

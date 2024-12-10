@@ -186,7 +186,6 @@ const WaveForm = forwardRef<WaveformHandle, Props>(({data, isExpandable, pixelPe
       }, [dragging, speed, isExpandable]);
 
     const stop = () => {
-        pitchShiftNode?.disconnect();
         soundSource?.stop();
         soundSource?.disconnect();
     }

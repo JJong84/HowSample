@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { AudioContextProvider } from './useAudioContext';
-import { SampleData, UploadedMusic } from './Type';
+import { Line, SampleData, UploadedMusic } from './Type';
 import SamplingMode from './SamplingMode';
 import SampleBreakMode from './SampleBreakMode';
 import { AddSourceModalProvider } from './useAddSourceModal';
 import AddSourceModal from './AddSourceModal';
 import { FormControlLabel, Switch } from '@mui/material';
+import { v4 } from 'uuid';
 
 function App() {
   const [targetMusic, setTargetMusic] = useState<UploadedMusic[]>([]);
@@ -13,6 +14,7 @@ function App() {
 
   const [userMusic, setUserMusic] = useState<UploadedMusic[]>([]);
   const [sources, setSources] = useState<SampleData[]>([]);
+  const [lines, setLines] = useState<Line[]>([{id: v4(), sampleLines: []}]);
   
   const [mode, setMode] = useState<'sampling' | 'break'>('sampling');
 
@@ -41,7 +43,14 @@ function App() {
         <div className="main">
           {
             mode == "sampling" ? 
-            <SamplingMode selectedFiles={userMusic} setSelectedFiles={setUserMusic} sources={sources} setSources={setSources} /> :
+            <SamplingMode
+              selectedFiles={userMusic}
+              setSelectedFiles={setUserMusic}
+              sources={sources}
+              setSources={setSources}
+              lines={lines}
+              setLines={setLines}
+            /> :
             <SampleBreakMode
               targetMusic={targetMusic}
               setTargetMusic={setTargetMusic}
@@ -49,6 +58,7 @@ function App() {
               setSampledMusic={setSampledMusic}
               sources={sources}
               setSources={setSources}
+              setLines={setLines}
             />
           }
         </div>

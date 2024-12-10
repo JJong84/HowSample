@@ -16,7 +16,7 @@ interface SampleData {
 // sampled - sampled music to find
 // target - music which used sampling
 // user - user uploaded source to make music
-type UploadedMusicType = "sampled" | "user" | "target"
+type UploadedMusicType = "sampled" | "user" | "target" | "break_result"
 
 interface UploadedMusic {
     file: File,
@@ -40,9 +40,19 @@ interface WaveformHandle {
     getNode: () => AudioBufferSourceNode | null | undefined;
 }
 
-interface BreakResult {
-    source: SampleData;
-    offset: number;
+interface BreakResponse {
+    data: {
+        speed: number;
+        pitch: number;
+        target: {
+            start: number;
+            end: number;
+        }
+        original: {
+            start: number;
+            end: number;
+        }
+    }[];
 }
 
-export type {BreakResult, SampleData, UploadedMusic, UploadedMusicType, SampleLine, Line, WaveformHandle}
+export type {SampleData, UploadedMusic, UploadedMusicType, SampleLine, Line, WaveformHandle, BreakResponse}

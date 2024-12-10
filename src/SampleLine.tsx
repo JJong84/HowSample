@@ -23,7 +23,7 @@ const SamplingLine = ({id, sources, line, onDragOver, onDrop, totalTime, pixelPe
         if (!lineRef.current) return;
 
         const rect = lineRef.current.getBoundingClientRect();
-        const dropX = e.clientX - rect.left; // 드롭 위치
+        const dropX = e.clientX - rect.left;
         const divWidth = rect.width;
         const droppedPosition = totalTime * dropX / divWidth;
 
