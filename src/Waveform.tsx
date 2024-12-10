@@ -11,8 +11,8 @@ interface Props {
 }
 
 const WaveForm = forwardRef<WaveformHandle, Props>(({data, pixelPerSecond, ranges}: Props, ref) => {
-    const [speed, setSpeed] = useState(1.0);
-    const [pitch, setPitch] = useState(0);
+    const [speed, ] = useState(1.0);
+    const [pitch, ] = useState(0);
     
     const {audioContext, createPitchShiftNode} = useAudioContext();
     const {audioBuffer} = data;

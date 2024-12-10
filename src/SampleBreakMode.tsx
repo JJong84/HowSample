@@ -33,7 +33,7 @@ const SampleBreakMode = ({setLines, sources, setSources, targetMusic, setTargetM
       const ids = mockupData.map(() => v4());
       const breakSources: SampleData[] = mockupData.map(({speed, pitch, original, target}, i) => ({
         ...ts,
-        id: ids[0],
+        id: ids[i],
         type: 'break_result',
         speed,
         pitch,
