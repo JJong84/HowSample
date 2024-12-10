@@ -1,5 +1,7 @@
 import { createContext, useContext, useMemo } from "react";
 
+const publicUrl = import.meta.env.BASE_URL;
+
 // AudioContext 생성 및 관리
 const AudioContextContext = createContext<{audioContext: AudioContext, createPitchShiftNode: (speed: number, pitch: number) => AudioWorkletNode} | null>(null);
 
@@ -7,7 +9,7 @@ export const AudioContextProvider: React.FC<{ children: React.ReactNode }> = ({ 
   const audioContext = useMemo(() => {
     const context = new AudioContext();
     // async function
-    context.audioWorklet.addModule("src/phaze/phase-vocoder.js").then(() => {
+    context.audioWorklet.addModule(`${publicUrl}/phase-vocoder.js`).then(() => {
       console.log("phase vocoder file load done");
     });
     return context;
