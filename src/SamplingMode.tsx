@@ -28,6 +28,7 @@ const SamplingMode = ({selectedFiles, setSelectedFiles, sources, setSources}: Sa
     const [, setPlayingNodes] = useState<(AudioBufferSourceNode | AudioWorkletNode)[]>([]);
 
     const handleAddLineClick = () => {
+        console.log("Line Added");
         setLines(prev => [...prev, {
             id: v4(),
             sampleLines: [],
