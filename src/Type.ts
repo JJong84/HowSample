@@ -41,9 +41,9 @@ interface WaveformHandle {
 }
 
 interface SampleRange {
-    sampleId?: UUIDTypes;
     start: number;
     end: number;
+    sampleId?: UUIDTypes;
 }
 
 type BreakResponse = {
@@ -51,6 +51,7 @@ type BreakResponse = {
     pitch: number;
     target: SampleRange;
     original: SampleRange;
+    sampleId?: UUIDTypes;
 }[];
 
 export type {SampleRange, SampleData, UploadedMusic, UploadedMusicType, SampleLine, Line, WaveformHandle, BreakResponse}

@@ -1,12 +1,12 @@
-import { Line, SampleData, SampleLine, SampleRange, UploadedMusic } from "./Type";
+import { Line, SampleData, SampleLine, BreakResponse, UploadedMusic, SampleRange } from "./Type";
 import MusicInput from "./MusicInput";
-import WaveForm from "./Waveform";
-// import SampleBreakResult from "./SampleBreakResult";
+import Waveform from "./Waveform";
 import "./style/sample-break.css";
 import { Button } from "@mui/material";
 import { KanYe } from "./MockData";
 import { v4 } from "uuid";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import WaveformBreakResult from "./WaveformBreakResult";
 
 interface SampleBreakModeProps {
     targetMusic: UploadedMusic[];
@@ -22,8 +22,12 @@ interface SampleBreakModeProps {
 const SampleBreakMode = ({setLines, sources, setSources, targetMusic, setTargetMusic, sampledMusic, setSampledMusic}: SampleBreakModeProps) => {
     const targetSource = sources.filter(({type}) => type == 'target');
     const sampledSources = sources.filter(({type}) => type == 'sampled');
-    const [targetRanges, setTargetRanges] = useState<SampleRange[]>([]);
-    const [originalRanges, setOriginalRanges] = useState<SampleRange[]>([]);
+    const [breakResult, setBreakResult] = useState<BreakResponse>([]);
+
+    // Global Sound Buffer Node
+    const [soundSource, setSoundSource] = useState<AudioBufferSourceNode | null>(null);
+    const [startedTime, setStartedTime] = useState<number | null>(null);
+    const [playingId, setPlayingId] = useState<string>("");
 
     //FIXME: Mock Data
     const handleAnalyzeClick = () => {
@@ -47,12 +51,8 @@ const SampleBreakMode = ({setLines, sources, setSources, targetMusic, setTargetM
         startTime: bs.offset || 0
       }));
 
-      setOriginalRanges(mockupData.map(({original}, i) => ({
-        ...original,
-        sampleId: ids[i]
-      })));
-      setTargetRanges(mockupData.map(({target}, i) => ({
-        ...target,
+      setBreakResult(mockupData.map((data, i) => ({
+        ...data,
         sampleId: ids[i]
       })));
       setSources((prev) => [...prev, ...breakSources]);
@@ -61,6 +61,25 @@ const SampleBreakMode = ({setLines, sources, setSources, targetMusic, setTargetM
         id: v4()
       }]);
     }
+
+    const targetRanges: SampleRange[] = useMemo(() => breakResult.map(({target, sampleId}) => ({
+      ...target,
+      sampleId
+    })), [breakResult]);
+
+    const pixelPerSeconds = useMemo(() => 
+      breakResult.map(({ original, target, speed }) => {
+        const targetDuration = target.end - target.start;
+        const originalDuration = original.end - original.start;
+        const totalDuration = targetDuration + originalDuration * (1 + 1/speed);
+
+        const gap = 16;
+        const containerWidth = document.querySelector(".wave-results-container")?.clientWidth || 800;
+
+        const calculatedPixelPerSecond = (containerWidth - gap * 2) / totalDuration;
+
+        return Math.max(calculatedPixelPerSecond, 0.5);
+      }), [breakResult]);
     
     return <>
       {/* {
@@ -68,18 +87,21 @@ const SampleBreakMode = ({setLines, sources, setSources, targetMusic, setTargetM
       } */}
       <div>Break Result</div>
       <div>Target</div>
-      <div className="waveform-container">
+      <div className="waveform-container-total-target">
         {
-          targetRanges.length > 0 && <WaveForm data={targetSource[0]} pixelPerSecond={10} ranges={targetRanges} />
+          targetSource.length > 0 && <Waveform id={targetSource[0].id} data={targetSource[0]} pixelPerSecond={10} ranges={targetRanges} />
         }
       </div>
-      
-      <div>Original</div>
-      <div className="waveform-container">
-        {
-          sampledSources.map((s) => <WaveForm id={s.id} data={s} pixelPerSecond={10} ranges={originalRanges}/>)
-        }
-      </div>
+      <div>Matches</div>
+      {
+        targetSource.length > 0 && sampledSources.map((sm, i) => breakResult.map(({sampleId, original, target, speed, pitch}) => 
+          <div className="wave-results-container">
+            <WaveformBreakResult playingId={playingId} setPlayingId={setPlayingId} startedTime={startedTime} setStartedTime={setStartedTime} soundSource={soundSource} setSoundSource={setSoundSource} id={`${sampleId}-target`} data={targetSource[0]} pixelPerSecond={pixelPerSeconds[i]} currentRange={target} speed={1.0} pitch={0} />
+            <WaveformBreakResult playingId={playingId} setPlayingId={setPlayingId} startedTime={startedTime} setStartedTime={setStartedTime} soundSource={soundSource} setSoundSource={setSoundSource} id={`${sampleId}-original`} data={sm} pixelPerSecond={pixelPerSeconds[i]} currentRange={original} speed={1.0} pitch={0} />
+            <WaveformBreakResult playingId={playingId} setPlayingId={setPlayingId} modified startedTime={startedTime} setStartedTime={setStartedTime} soundSource={soundSource} setSoundSource={setSoundSource} id={`${sampleId}-original-modified`} data={sm} pixelPerSecond={pixelPerSeconds[i]} currentRange={original} speed={speed} pitch={pitch}/>
+          </div>
+        ))
+      }
       <div>
         Select Target
       </div>

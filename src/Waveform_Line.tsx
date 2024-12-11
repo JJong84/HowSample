@@ -57,8 +57,6 @@ const WaveForm = forwardRef<WaveformHandle, Props>(({data, pixelPerSecond}: Prop
             return;
         }
 
-        // requestAnimationFrame(draw);
-
         const channelData = audioBuffer.getChannelData(0);
         const startSample = Math.floor(startPoint * audioBuffer.sampleRate);
         const endSample = Math.floor(endPoint * audioBuffer.sampleRate);
