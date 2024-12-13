@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import { SampleData, UploadedMusic, UploadedMusicType } from './Type';
 import { useAudioContext } from './useAudioContext';
 import { makeSampleData } from './Helpers';
+import { Button } from '@mui/material';
 
 interface MusicInputProps {
     multiple?: boolean;
@@ -9,9 +10,16 @@ interface MusicInputProps {
     setSelectedFiles: React.Dispatch<React.SetStateAction<UploadedMusic[]>>;
     type: UploadedMusicType;
     setSources: React.Dispatch<React.SetStateAction<SampleData[]>>;
+    buttonText: string;
 }
 
-const MusicInput = ({ multiple, setSelectedFiles, type, setSources }: MusicInputProps) => {
+const MusicInput = ({
+    multiple,
+    setSelectedFiles,
+    type,
+    setSources,
+    buttonText,
+}: MusicInputProps) => {
     const { audioContext } = useAudioContext();
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -65,9 +73,14 @@ const MusicInput = ({ multiple, setSelectedFiles, type, setSources }: MusicInput
                 hidden
                 multiple={multiple}
             />
-            <button onClick={handleButtonClick} id="uploadBtn">
-                Select Audio File
-            </button>
+            <Button
+                variant="outlined"
+                sx={{ marginRight: '20px' }}
+                onClick={handleButtonClick}
+                id="uploadBtn"
+            >
+                {buttonText}
+            </Button>
         </>
     );
 };

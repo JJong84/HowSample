@@ -19,6 +19,8 @@ import {
     Typography,
 } from '@mui/material';
 import './style/sampling.css';
+import { OneMoreTime } from './MockData';
+import { makeSampleDataFromPublicFile } from './Helpers';
 
 interface SamplingModeProps {
     selectedFiles: UploadedMusic[];
@@ -190,15 +192,73 @@ const SamplingMode = ({
         setLines([{ id: v4(), sampleLines: [] }]);
     };
 
+    const handleLoadDemoClick = async () => {
+        const demoSources: SampleData[] = [];
+        await makeSampleDataFromPublicFile('More Spell On You.mp3', audioContext, 'user').then(
+            (source) => {
+                demoSources.push(source);
+            },
+        );
+
+        if (!demoSources.length) {
+            return;
+        }
+
+        const sampleDatas: SampleData[] = OneMoreTime.map((s) => ({
+            ...demoSources[0],
+            ...s,
+            id: v4(),
+        }));
+
+        setSources((prev) => [...prev, ...demoSources, ...sampleDatas]);
+        setLines([
+            {
+                id: v4(),
+                sampleLines: [
+                    { startTime: 2.766, sampleDataId: sampleDatas[0].id },
+                    { startTime: 6.454, sampleDataId: sampleDatas[0].id },
+                    { startTime: 10.14, sampleDataId: sampleDatas[0].id },
+                    { startTime: 13.932, sampleDataId: sampleDatas[0].id },
+                ],
+            },
+            {
+                id: v4(),
+                sampleLines: [
+                    { startTime: 0, sampleDataId: sampleDatas[1].id },
+                    { startTime: 0.922, sampleDataId: sampleDatas[1].id },
+                    { startTime: 1.844, sampleDataId: sampleDatas[1].id },
+                    { startTime: 3.688, sampleDataId: sampleDatas[1].id },
+                    { startTime: 4.61, sampleDataId: sampleDatas[1].id },
+                    { startTime: 5.532, sampleDataId: sampleDatas[1].id },
+                    { startTime: 7.376, sampleDataId: sampleDatas[1].id },
+                    { startTime: 8.298, sampleDataId: sampleDatas[1].id },
+                    { startTime: 9.22, sampleDataId: sampleDatas[1].id },
+                ],
+            },
+            {
+                id: v4(),
+                sampleLines: [
+                    { startTime: 11.064, sampleDataId: sampleDatas[2].id },
+                    { startTime: 11.542, sampleDataId: sampleDatas[2].id },
+                    { startTime: 12.02, sampleDataId: sampleDatas[2].id },
+                    { startTime: 12.498, sampleDataId: sampleDatas[2].id },
+                    { startTime: 12.976, sampleDataId: sampleDatas[2].id },
+                    { startTime: 13.454, sampleDataId: sampleDatas[2].id },
+                ],
+            },
+        ]);
+    }
+
     return (
         <>
+            <Button onClick={handleLoadDemoClick}>Load Demo</Button>
             <Button onClick={handleResetClick}>Reset</Button>
             <Button onClick={handlePlayClick}>Play</Button>
             <div className="lines-container">
                 <div className="progress-line" ref={progressLineRef} />
                 {lines.map((li) => (
                     <SamplingLine
-                        key={li.id as string}
+                        key={v4()}
                         id={li.id}
                         onDragOver={(e) => e.preventDefault()}
                         onDrop={handleDrop}
@@ -215,6 +275,7 @@ const SamplingMode = ({
                 selectedFiles={selectedFiles}
                 setSelectedFiles={setSelectedFiles}
                 type="user"
+                buttonText="Select Audio File"
             />
             <div>
                 <Typography variant="h6" sx={{ marginBottom: 2 }}>
@@ -235,7 +296,7 @@ const SamplingMode = ({
                         <TableBody>
                             {sources.map((source) => (
                                 <TableRow
-                                    key={source.id.toString()}
+                                    key={`${source.id.toString()}${source.startPoint}${source.endPoint}`}
                                     onClick={() => handleSourceClick(source)}
                                 >
                                     <TableCell>

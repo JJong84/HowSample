@@ -108,11 +108,11 @@ const AddSourceModal = ({ setSources }: AddSourceModalProps) => {
                         <Button
                             variant="outlined"
                             onClick={decrementPixelPerSecond}
-                            sx={{ marginRight: '10px' }}
+                            // sx={{ marginRight: '10px' }}
                         >
                             -
                         </Button>
-                        <span>{pixelPerSecond} px/sec</span>
+                        {/* <span>{pixelPerSecond} px/sec</span> */}
                         <Button
                             variant="outlined"
                             onClick={incrementPixelPerSecond}

@@ -18,7 +18,7 @@
     display: flex;
 }
 
-.waveform-container {
+.waveform-container-sampling {
     position: absolute;
     height: 100%;
 }

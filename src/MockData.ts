@@ -1,4 +1,4 @@
-import { BreakResponse } from './Type';
+import { BreakResponse, MockUpSample } from './Type';
 
 const KanYe: BreakResponse = [
     {
@@ -27,4 +27,25 @@ const KanYe: BreakResponse = [
     },
 ];
 
-export { KanYe };
+const OneMoreTime: MockUpSample[] = [
+    {
+        speed: 1,
+        pitch: 1,
+        startPoint: 20.0,
+        endPoint: 20.8,
+    },
+    {
+        speed: 1,
+        pitch: 1,
+        startPoint: 22.278,
+        endPoint: 23.2,
+    },
+    {
+        speed: 1,
+        pitch: 1,
+        startPoint: 24.089,
+        endPoint: 24.5,
+    },
+];
+
+export { KanYe, OneMoreTime };

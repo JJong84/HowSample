@@ -3,7 +3,7 @@
 import { Line, SampleData } from './Type';
 import { useMemo, useRef } from 'react';
 import WaveForm from './Waveform_Line';
-import { UUIDTypes } from 'uuid';
+import { UUIDTypes, v4 } from 'uuid';
 
 interface SampleLineProps {
     id: UUIDTypes;
@@ -41,6 +41,7 @@ const SamplingLine = ({
     const samples = useMemo(() => {
         return line.sampleLines.map((sl) => {
             const source = sources.find((s) => s.id == sl.sampleDataId);
+            console.log(source);
             return { startTime: sl.startTime, source };
         });
     }, [sources, line]);
@@ -58,8 +59,8 @@ const SamplingLine = ({
                     ({ source, startTime }) =>
                         source && (
                             <div
-                                key={source.id as string}
-                                className="waveform-container"
+                                key={v4()}
+                                className="waveform-container-sampling"
                                 style={{ left: startTime * pixelPerSecond }}
                             >
                                 <WaveForm data={source} pixelPerSecond={pixelPerSecond} />

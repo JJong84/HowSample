@@ -136,95 +136,111 @@ const SampleBreakMode = ({
 
     return (
         <>
-            {/* {
-        breakResultSources.length > 0 && <SampleBreakResult sources={sources}/>
-      } */}
-            <div>Break Result</div>
-            <div>Target</div>
-            <div className="waveform-container-total-target">
-                {targetSource.length > 0 && (
-                    <Waveform
-                        id={targetSource[0].id}
-                        data={targetSource[0]}
-                        pixelPerSecond={10}
-                        ranges={targetRanges}
-                    />
-                )}
-            </div>
-            <div>Matches</div>
-            {targetSource.length > 0 &&
-                sampledSources.map((sm, i) =>
-                    breakResult.map(({ sampleId, original, target, speed, pitch }) => (
-                        <div key={sampleId as string} className="wave-results-container">
-                            <WaveformBreakResult
-                                playingId={playingId}
-                                setPlayingId={setPlayingId}
-                                startedTime={startedTime}
-                                setStartedTime={setStartedTime}
-                                soundSource={soundSource}
-                                setSoundSource={setSoundSource}
-                                id={`${sampleId}-target`}
-                                data={targetSource[0]}
-                                pixelPerSecond={pixelPerSeconds[i]}
-                                currentRange={target}
-                                speed={1.0}
-                                pitch={0}
-                            />
-                            <WaveformBreakResult
-                                playingId={playingId}
-                                setPlayingId={setPlayingId}
-                                startedTime={startedTime}
-                                setStartedTime={setStartedTime}
-                                soundSource={soundSource}
-                                setSoundSource={setSoundSource}
-                                id={`${sampleId}-original`}
-                                data={sm}
-                                pixelPerSecond={pixelPerSeconds[i]}
-                                currentRange={original}
-                                speed={1.0}
-                                pitch={0}
-                            />
-                            <WaveformBreakResult
-                                playingId={playingId}
-                                setPlayingId={setPlayingId}
-                                startedTime={startedTime}
-                                setStartedTime={setStartedTime}
-                                soundSource={soundSource}
-                                setSoundSource={setSoundSource}
-                                id={`${sampleId}-original-modified`}
-                                data={sm}
-                                pixelPerSecond={pixelPerSeconds[i]}
-                                currentRange={original}
-                                speed={speed}
-                                pitch={pitch}
-                            />
-                            <div>{formatRange(original)}</div>
-                            <div>{`speed: ${speed.toFixed(2)}x`}</div>
-                            <div>{`pitch: ${pitch} semitones`}</div>
-                        </div>
-                    )),
-                )}
-            <div>Select Target</div>
+            {targetSource.length > 0 && (
+                <>
+                    <div>Break Result</div>
+                    <div className="waveform-container-total-target">
+                        <Waveform
+                            playingId={playingId}
+                            setPlayingId={setPlayingId}
+                            startedTime={startedTime}
+                            setStartedTime={setStartedTime}
+                            soundSource={soundSource}
+                            setSoundSource={setSoundSource}
+                            id={targetSource[0].id as string}
+                            data={targetSource[0]}
+                            ranges={targetRanges}
+                        />
+                    </div>
+                </>
+            )}
+            {targetSource.length > 0 && (
+                <>
+                    <div>Matches</div>
+                    {sampledSources.map((sm, i) =>
+                        breakResult.map(({ sampleId, original, target, speed, pitch }) => (
+                            <div key={sampleId as string} className="wave-results-container">
+                                <WaveformBreakResult
+                                    playingId={playingId}
+                                    setPlayingId={setPlayingId}
+                                    startedTime={startedTime}
+                                    setStartedTime={setStartedTime}
+                                    soundSource={soundSource}
+                                    setSoundSource={setSoundSource}
+                                    id={`${sampleId}-target`}
+                                    data={targetSource[0]}
+                                    pixelPerSecond={pixelPerSeconds[i]}
+                                    currentRange={target}
+                                    speed={1.0}
+                                    pitch={0}
+                                />
+                                <WaveformBreakResult
+                                    playingId={playingId}
+                                    setPlayingId={setPlayingId}
+                                    startedTime={startedTime}
+                                    setStartedTime={setStartedTime}
+                                    soundSource={soundSource}
+                                    setSoundSource={setSoundSource}
+                                    id={`${sampleId}-original`}
+                                    data={sm}
+                                    pixelPerSecond={pixelPerSeconds[i]}
+                                    currentRange={original}
+                                    speed={1.0}
+                                    pitch={0}
+                                />
+                                <WaveformBreakResult
+                                    playingId={playingId}
+                                    setPlayingId={setPlayingId}
+                                    startedTime={startedTime}
+                                    setStartedTime={setStartedTime}
+                                    soundSource={soundSource}
+                                    setSoundSource={setSoundSource}
+                                    id={`${sampleId}-original-modified`}
+                                    data={sm}
+                                    pixelPerSecond={pixelPerSeconds[i]}
+                                    currentRange={original}
+                                    speed={speed}
+                                    pitch={pitch}
+                                />
+                                <div>{formatRange(original)}</div>
+                                <div>{`speed: ${speed.toFixed(2)}x`}</div>
+                                <div>{`pitch: ${pitch} semitones`}</div>
+                            </div>
+                        )),
+                    )}
+                </>
+            )}
             <MusicInput
                 setSources={setSources}
                 selectedFiles={targetMusic}
                 setSelectedFiles={setTargetMusic}
                 type="target"
+                buttonText="Select Target Audio File"
             />
-            <div>Select Original</div>
             <MusicInput
                 setSources={setSources}
                 multiple
                 selectedFiles={sampledMusic}
                 setSelectedFiles={setSampledMusic}
                 type="sampled"
+                buttonText="Select Original Audio File"
             />
-            <Button variant="outlined" sx={{ marginRight: '20px' }} onClick={handleLoadDemoClick}>
-                Load Demo
-            </Button>
-            <Button variant="outlined" sx={{ marginRight: '20px' }} onClick={handleAnalyzeClick}>
-                Analyze
-            </Button>
+            <div>
+                <Button
+                    variant="outlined"
+                    sx={{ marginRight: '20px' }}
+                    onClick={handleLoadDemoClick}
+                >
+                    Load Demo
+                </Button>
+                <Button
+                    variant="outlined"
+                    sx={{ marginRight: '20px' }}
+                    onClick={handleAnalyzeClick}
+                >
+                    Analyze
+                </Button>
+            </div>
         </>
     );
 };

@@ -184,7 +184,6 @@ const WaveformBreakResult = ({
     };
 
     const handleCanvasClick = () => {
-        console.log(playingId, id);
         if (!playingId) {
             start();
         } else if (playingId == id) {

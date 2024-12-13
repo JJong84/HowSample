@@ -54,6 +54,13 @@ type BreakResponse = {
     sampleId?: UUIDTypes;
 }[];
 
+interface MockUpSample {
+    pitch: number;
+    speed: number;
+    startPoint: number;
+    endPoint: number;
+}
+
 export type {
     SampleRange,
     SampleData,
@@ -63,4 +70,5 @@ export type {
     Line,
     WaveformHandle,
     BreakResponse,
+    MockUpSample,
 };
