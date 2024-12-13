@@ -7,6 +7,8 @@ import { KanYe } from "./MockData";
 import { v4 } from "uuid";
 import { useMemo, useState } from "react";
 import WaveformBreakResult from "./WaveformBreakResult";
+import { makeSampleDataFromPublicFile } from "./Helpers";
+import { useAudioContext } from "./useAudioContext";
 
 interface SampleBreakModeProps {
     targetMusic: UploadedMusic[];
@@ -29,14 +31,25 @@ const SampleBreakMode = ({setLines, sources, setSources, targetMusic, setTargetM
     const [startedTime, setStartedTime] = useState<number | null>(null);
     const [playingId, setPlayingId] = useState<string>("");
 
-    //FIXME: Mock Data
-    const handleAnalyzeClick = () => {
+    const {audioContext} = useAudioContext();
+
+    const handleLoadDemoClick = async () => {
+      const demoSources: SampleData[] = [];
+      await makeSampleDataFromPublicFile("Through the Fire.mp3", audioContext, "sampled")
+        .then((source) => {
+          demoSources.push(source);
+        });
+
+      await makeSampleDataFromPublicFile("Through the Wire (Inst).mp3", audioContext, "target")
+        .then((source) => {
+          demoSources.push(source);
+        });
+
       const mockupData = KanYe;
-      const ts = sampledSources[0]; //TODO: Move to Kanye
 
       const ids = mockupData.map(() => v4());
       const breakSources: SampleData[] = mockupData.map(({speed, pitch, original, target}, i) => ({
-        ...ts,
+        ...demoSources[0], // sampled song
         id: ids[i],
         type: 'break_result',
         speed,
@@ -55,11 +68,15 @@ const SampleBreakMode = ({setLines, sources, setSources, targetMusic, setTargetM
         ...data,
         sampleId: ids[i]
       })));
-      setSources((prev) => [...prev, ...breakSources]);
+      setSources((prev) => [...prev, ...demoSources, ...breakSources]);
       setLines((prev) => [...prev, {
         sampleLines: breakLines,
         id: v4()
       }]);
+    }
+
+    const handleAnalyzeClick = () => {
+      
     }
 
     const targetRanges: SampleRange[] = useMemo(() => breakResult.map(({target, sampleId}) => ({
@@ -95,7 +112,7 @@ const SampleBreakMode = ({setLines, sources, setSources, targetMusic, setTargetM
       <div>Matches</div>
       {
         targetSource.length > 0 && sampledSources.map((sm, i) => breakResult.map(({sampleId, original, target, speed, pitch}) => 
-          <div className="wave-results-container">
+          <div key={sampleId as string} className="wave-results-container">
             <WaveformBreakResult playingId={playingId} setPlayingId={setPlayingId} startedTime={startedTime} setStartedTime={setStartedTime} soundSource={soundSource} setSoundSource={setSoundSource} id={`${sampleId}-target`} data={targetSource[0]} pixelPerSecond={pixelPerSeconds[i]} currentRange={target} speed={1.0} pitch={0} />
             <WaveformBreakResult playingId={playingId} setPlayingId={setPlayingId} startedTime={startedTime} setStartedTime={setStartedTime} soundSource={soundSource} setSoundSource={setSoundSource} id={`${sampleId}-original`} data={sm} pixelPerSecond={pixelPerSeconds[i]} currentRange={original} speed={1.0} pitch={0} />
             <WaveformBreakResult playingId={playingId} setPlayingId={setPlayingId} modified startedTime={startedTime} setStartedTime={setStartedTime} soundSource={soundSource} setSoundSource={setSoundSource} id={`${sampleId}-original-modified`} data={sm} pixelPerSecond={pixelPerSeconds[i]} currentRange={original} speed={speed} pitch={pitch}/>
@@ -110,6 +127,13 @@ const SampleBreakMode = ({setLines, sources, setSources, targetMusic, setTargetM
         Select Original
       </div>
       <MusicInput setSources={setSources} multiple selectedFiles={sampledMusic} setSelectedFiles={setSampledMusic} type='sampled' />
+      <Button
+        variant="outlined"
+        sx={{ marginRight: "20px" }}
+        onClick={handleLoadDemoClick}
+      >
+        Load Demo
+      </Button>
       <Button
         variant="outlined"
         sx={{ marginRight: "20px" }}

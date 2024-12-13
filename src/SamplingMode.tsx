@@ -42,8 +42,6 @@ const SamplingMode = ({selectedFiles, setSelectedFiles, sources, setSources, lin
         }]);
     }
 
-    console.log(lines);
-
     const handleSourceClick = (source: SampleData) => {
         openModal(source, false);
     }
@@ -183,6 +181,7 @@ const SamplingMode = ({selectedFiles, setSelectedFiles, sources, setSources, lin
             {
                 lines.map((li) =>
                     <SamplingLine
+                        key={li.id as string}
                         id={li.id}
                         onDragOver={(e) => e.preventDefault()}
                         onDrop={handleDrop}

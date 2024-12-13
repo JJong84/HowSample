@@ -206,8 +206,9 @@ const Waveform = forwardRef<WaveformHandle, Props>(({data, pixelPerSecond, range
     return <>
         <div ref={progressLineRef} className="progress-line" />
         {
-            ranges.map(({start, end}) => <div
+            ranges.map(({start, end}, i) => <div
                 className="drag"
+                key={i}
                 >
                 <div
                     className="dragged"

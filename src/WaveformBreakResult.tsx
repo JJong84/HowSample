@@ -18,7 +18,7 @@ interface Props {
     modified?: boolean; // modified with pitch and speed
 }
 
-const WaveformBreakResult = ({playingId, setPlayingId, id, soundSource, setSoundSource, data, pixelPerSecond, currentRange, speed, pitch, startedTime, setStartedTime, modified}: Props, ref) => {
+const WaveformBreakResult = ({playingId, setPlayingId, id, soundSource, setSoundSource, data, pixelPerSecond, currentRange, speed, pitch, startedTime, setStartedTime, modified}: Props) => {
     const {start: startPoint, end: endPoint} = currentRange;
     
     const {audioContext, createPitchShiftNode} = useAudioContext();

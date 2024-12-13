@@ -44,6 +44,7 @@ const SamplingLine = ({id, sources, line, onDragOver, onDrop, totalTime, pixelPe
                 (
                     source &&
                     <div
+                        key={source.id as string}
                         className="waveform-container"
                         style={{left: startTime * pixelPerSecond}}>
                         <WaveForm data={source} pixelPerSecond={pixelPerSecond} />
