@@ -44,7 +44,7 @@ const OneMoreTime: MockUpSample[] = [
         speed: 1,
         pitch: 1,
         startPoint: 24.089,
-        endPoint: 24.567,
+        endPoint: 24.5,
     },
 ];
 
