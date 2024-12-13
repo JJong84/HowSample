@@ -184,22 +184,13 @@ const Waveform = ({
         source.start(0, data.startPoint, data.endPoint - data.startPoint);
 
         source.addEventListener('ended', () => {
-            stop();
+            handleStop();
         });
 
         setStartedTime(audioContext.currentTime);
         setSoundSource(source);
         setPlayingId(id);
         return source;
-    };
-
-    const playStop = () => {
-        if (soundSource) {
-            stop();
-        } else {
-            const source = start();
-            setSoundSource(source);
-        }
     };
 
     // Function for message to node
