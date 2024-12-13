@@ -42,7 +42,7 @@ const WaveForm = forwardRef<WaveformHandle, Props>(({ data, pixelPerSecond }: Pr
     }, [speed, pitch]);
 
     useEffect(() => {
-        if (startedTime && progressLineRef.current) {
+        if (startedTime != null && progressLineRef.current) {
             const transformMatch =
                 progressLineRef.current.style.transform.match(/translateX\(([-\d.]+)px\)/);
             const leftMatch = progressLineRef.current.style.left.match(/([-\d.]+)px/);
@@ -61,7 +61,7 @@ const WaveForm = forwardRef<WaveformHandle, Props>(({ data, pixelPerSecond }: Pr
     useEffect(() => {
         let animationFrameId: number;
 
-        if (startedTime && progressLineRef.current) {
+        if (startedTime != null && progressLineRef.current) {
             progressLineRef.current.style.visibility = 'visible';
         } else if (progressLineRef.current) {
             progressLineRef.current.style.left = `${startPoint * pixelPerSecond}px`;
@@ -69,7 +69,7 @@ const WaveForm = forwardRef<WaveformHandle, Props>(({ data, pixelPerSecond }: Pr
         }
 
         const updateAnimation = () => {
-            if (startedTime && progressLineRef.current) {
+            if (startedTime != null && progressLineRef.current) {
                 // Calculate translateX based on AudioContext's currentTime
                 const translateX =
                     (audioContext.currentTime - startedTime) * pixelPerSecond * speed;

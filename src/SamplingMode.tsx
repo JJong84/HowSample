@@ -111,7 +111,7 @@ const SamplingMode = ({
     };
 
     const handlePlayClick = () => {
-        if (startedTime) {
+        if (startedTime != null) {
             intialize();
         } else {
             let lastSourceNode: AudioBufferSourceNode | null = null;
@@ -170,7 +170,7 @@ const SamplingMode = ({
         let animationFrameId: number;
 
         const updateAnimation = () => {
-            if (startedTime && progressLineRef.current) {
+            if (startedTime != null && progressLineRef.current) {
                 // Calculate translateX based on AudioContext's currentTime
                 const translateX = (audioContext.currentTime - startedTime) * PIXEL_PER_SECOND;
                 progressLineRef.current.style.transform = `translateX(${translateX}px)`;
@@ -247,7 +247,7 @@ const SamplingMode = ({
                 ],
             },
         ]);
-    }
+    };
 
     return (
         <>

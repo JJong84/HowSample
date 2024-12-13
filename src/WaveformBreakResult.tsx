@@ -47,14 +47,14 @@ const WaveformBreakResult = ({
     useEffect(() => {
         let animationFrameId: number;
 
-        if (playingId == id && startedTime && progressLineRef.current) {
+        if (playingId == id && startedTime != null && progressLineRef.current) {
             progressLineRef.current.style.visibility = 'visible';
         } else if (progressLineRef.current) {
             progressLineRef.current.style.visibility = 'hidden';
         }
 
         const updateAnimation = () => {
-            if (playingId == id && startedTime && progressLineRef.current) {
+            if (playingId == id && startedTime != null && progressLineRef.current) {
                 // Calculate translateX based on AudioContext's currentTime
                 const translateX =
                     (audioContext.currentTime - startedTime) * pixelPerSecond * speed;
