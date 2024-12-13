@@ -11,7 +11,18 @@ interface AddSourceModalProps {
 }
 
 const AddSourceModal = ({ setSources }: AddSourceModalProps) => {
-    const { isModalOpen, speed, pitch, setSpeed, setPitch, source, closeModal, isEdit, startPoint, endPoint } = useAddSourceModal();
+    const {
+        isModalOpen,
+        speed,
+        pitch,
+        setSpeed,
+        setPitch,
+        source,
+        closeModal,
+        isEdit,
+        startPoint,
+        endPoint,
+    } = useAddSourceModal();
     const waveFormRef = useRef<WaveformHandle>(null);
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -94,11 +105,19 @@ const AddSourceModal = ({ setSources }: AddSourceModalProps) => {
                         Play
                     </Button>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <Button variant="outlined" onClick={decrementPixelPerSecond} sx={{ marginRight: '10px' }}>
+                        <Button
+                            variant="outlined"
+                            onClick={decrementPixelPerSecond}
+                            sx={{ marginRight: '10px' }}
+                        >
                             -
                         </Button>
                         <span>{pixelPerSecond} px/sec</span>
-                        <Button variant="outlined" onClick={incrementPixelPerSecond} sx={{ marginLeft: '10px' }}>
+                        <Button
+                            variant="outlined"
+                            onClick={incrementPixelPerSecond}
+                            sx={{ marginLeft: '10px' }}
+                        >
                             +
                         </Button>
                     </Box>
@@ -115,17 +134,39 @@ const AddSourceModal = ({ setSources }: AddSourceModalProps) => {
                         position: 'relative',
                     }}
                 >
-                    {source && <WaveForm ref={waveFormRef} pixelPerSecond={pixelPerSecond} data={source} speed={speed} pitch={pitch} />}
+                    {source && (
+                        <WaveForm
+                            ref={waveFormRef}
+                            pixelPerSecond={pixelPerSecond}
+                            data={source}
+                            speed={speed}
+                            pitch={pitch}
+                        />
+                    )}
                 </Box>
                 <Box sx={{ marginBottom: '20px' }}>
                     <Box>
                         <label>Speed:</label>
-                        <Slider value={speed} onChange={(_, value) => handleChangeSpeed(value as number)} min={0.5} max={2.0} step={0.1} valueLabelDisplay="auto" />
+                        <Slider
+                            value={speed}
+                            onChange={(_, value) => handleChangeSpeed(value as number)}
+                            min={0.5}
+                            max={2.0}
+                            step={0.1}
+                            valueLabelDisplay="auto"
+                        />
                         <span>{speed.toFixed(1)}x</span>
                     </Box>
                     <Box>
                         <label>Pitch:</label>
-                        <Slider value={pitch} onChange={(_, value) => handleChangePitch(value as number)} min={-12} max={12} step={1} valueLabelDisplay="auto" />
+                        <Slider
+                            value={pitch}
+                            onChange={(_, value) => handleChangePitch(value as number)}
+                            min={-12}
+                            max={12}
+                            step={1}
+                            valueLabelDisplay="auto"
+                        />
                         <span>{pitch} semitones</span>
                     </Box>
                 </Box>

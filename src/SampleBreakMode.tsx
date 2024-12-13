@@ -21,7 +21,15 @@ interface SampleBreakModeProps {
 }
 
 //TODO: sampledSources => 1개로 고정해야함 (현재는 1개라는 가정)
-const SampleBreakMode = ({ setLines, sources, setSources, targetMusic, setTargetMusic, sampledMusic, setSampledMusic }: SampleBreakModeProps) => {
+const SampleBreakMode = ({
+    setLines,
+    sources,
+    setSources,
+    targetMusic,
+    setTargetMusic,
+    sampledMusic,
+    setSampledMusic,
+}: SampleBreakModeProps) => {
     const targetSource = sources.filter(({ type }) => type == 'target');
     const sampledSources = sources.filter(({ type }) => type == 'sampled');
     const [breakResult, setBreakResult] = useState<BreakResponse>([]);
@@ -35,27 +43,35 @@ const SampleBreakMode = ({ setLines, sources, setSources, targetMusic, setTarget
 
     const handleLoadDemoClick = async () => {
         const demoSources: SampleData[] = [];
-        await makeSampleDataFromPublicFile('Through the Fire.mp3', audioContext, 'sampled').then((source) => {
-            demoSources.push(source);
-        });
+        await makeSampleDataFromPublicFile('Through the Fire.mp3', audioContext, 'sampled').then(
+            (source) => {
+                demoSources.push(source);
+            },
+        );
 
-        await makeSampleDataFromPublicFile('Through the Wire (Inst).mp3', audioContext, 'target').then((source) => {
+        await makeSampleDataFromPublicFile(
+            'Through the Wire (Inst).mp3',
+            audioContext,
+            'target',
+        ).then((source) => {
             demoSources.push(source);
         });
 
         const mockupData = KanYe;
 
         const ids = mockupData.map(() => v4());
-        const breakSources: SampleData[] = mockupData.map(({ speed, pitch, original, target }, i) => ({
-            ...demoSources[0], // sampled song
-            id: ids[i],
-            type: 'break_result',
-            speed,
-            pitch,
-            startPoint: original.start,
-            endPoint: original.end,
-            offset: target.start,
-        }));
+        const breakSources: SampleData[] = mockupData.map(
+            ({ speed, pitch, original, target }, i) => ({
+                ...demoSources[0], // sampled song
+                id: ids[i],
+                type: 'break_result',
+                speed,
+                pitch,
+                startPoint: original.start,
+                endPoint: original.end,
+                offset: target.start,
+            }),
+        );
 
         const breakLines: SampleLine[] = breakSources.map((bs) => ({
             sampleDataId: bs.id,
@@ -97,7 +113,8 @@ const SampleBreakMode = ({ setLines, sources, setSources, targetMusic, setTarget
                 const totalDuration = targetDuration + originalDuration * (1 + 1 / speed);
 
                 const gap = 16;
-                const containerWidth = document.querySelector('.wave-results-container')?.clientWidth || 800;
+                const containerWidth =
+                    document.querySelector('.wave-results-container')?.clientWidth || 800;
 
                 const calculatedPixelPerSecond = (containerWidth - gap * 2) / totalDuration;
 
@@ -106,6 +123,17 @@ const SampleBreakMode = ({ setLines, sources, setSources, targetMusic, setTarget
         [breakResult],
     );
 
+    const formatTime = (seconds: number): string => {
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = Math.floor(seconds % 60);
+        return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+    };
+
+    // 범위를 "분:초 - 분:초"로 변환
+    const formatRange = (currentRange: SampleRange): string => {
+        return `${formatTime(currentRange.start)} - ${formatTime(currentRange.end)}`;
+    };
+
     return (
         <>
             {/* {
@@ -113,7 +141,16 @@ const SampleBreakMode = ({ setLines, sources, setSources, targetMusic, setTarget
       } */}
             <div>Break Result</div>
             <div>Target</div>
-            <div className="waveform-container-total-target">{targetSource.length > 0 && <Waveform id={targetSource[0].id} data={targetSource[0]} pixelPerSecond={10} ranges={targetRanges} />}</div>
+            <div className="waveform-container-total-target">
+                {targetSource.length > 0 && (
+                    <Waveform
+                        id={targetSource[0].id}
+                        data={targetSource[0]}
+                        pixelPerSecond={10}
+                        ranges={targetRanges}
+                    />
+                )}
+            </div>
             <div>Matches</div>
             {targetSource.length > 0 &&
                 sampledSources.map((sm, i) =>
@@ -150,7 +187,6 @@ const SampleBreakMode = ({ setLines, sources, setSources, targetMusic, setTarget
                             <WaveformBreakResult
                                 playingId={playingId}
                                 setPlayingId={setPlayingId}
-                                modified
                                 startedTime={startedTime}
                                 setStartedTime={setStartedTime}
                                 soundSource={soundSource}
@@ -162,13 +198,27 @@ const SampleBreakMode = ({ setLines, sources, setSources, targetMusic, setTarget
                                 speed={speed}
                                 pitch={pitch}
                             />
+                            <div>{formatRange(original)}</div>
+                            <div>{`speed: ${speed.toFixed(2)}x`}</div>
+                            <div>{`pitch: ${pitch} semitones`}</div>
                         </div>
                     )),
                 )}
             <div>Select Target</div>
-            <MusicInput setSources={setSources} selectedFiles={targetMusic} setSelectedFiles={setTargetMusic} type="target" />
+            <MusicInput
+                setSources={setSources}
+                selectedFiles={targetMusic}
+                setSelectedFiles={setTargetMusic}
+                type="target"
+            />
             <div>Select Original</div>
-            <MusicInput setSources={setSources} multiple selectedFiles={sampledMusic} setSelectedFiles={setSampledMusic} type="sampled" />
+            <MusicInput
+                setSources={setSources}
+                multiple
+                selectedFiles={sampledMusic}
+                setSelectedFiles={setSampledMusic}
+                type="sampled"
+            />
             <Button variant="outlined" sx={{ marginRight: '20px' }} onClick={handleLoadDemoClick}>
                 Load Demo
             </Button>

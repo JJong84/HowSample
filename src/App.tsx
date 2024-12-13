@@ -31,11 +31,27 @@ function App() {
             <AddSourceModalProvider>
                 <header className="header">
                     <h1>How Sample?</h1>
-                    <FormControlLabel control={<Switch checked={mode == 'break'} onChange={handleToggleClick} inputProps={{ 'aria-label': 'controlled' }} />} label={`${mode} mode`} />
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                checked={mode == 'break'}
+                                onChange={handleToggleClick}
+                                inputProps={{ 'aria-label': 'controlled' }}
+                            />
+                        }
+                        label={`${mode} mode`}
+                    />
                 </header>
                 <div className="main">
                     {mode == 'sampling' ? (
-                        <SamplingMode selectedFiles={userMusic} setSelectedFiles={setUserMusic} sources={sources} setSources={setSources} lines={lines} setLines={setLines} />
+                        <SamplingMode
+                            selectedFiles={userMusic}
+                            setSelectedFiles={setUserMusic}
+                            sources={sources}
+                            setSources={setSources}
+                            lines={lines}
+                            setLines={setLines}
+                        />
                     ) : (
                         <SampleBreakMode
                             targetMusic={targetMusic}

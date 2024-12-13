@@ -56,7 +56,9 @@ class OLAProcessor extends AudioWorkletProcessor {
 
         this.inputBuffers[inputIndex] = new Array(nbChannels);
         for (var i = 0; i < nbChannels; i++) {
-            this.inputBuffers[inputIndex][i] = new Float32Array(this.blockSize + WEBAUDIO_BLOCK_SIZE);
+            this.inputBuffers[inputIndex][i] = new Float32Array(
+                this.blockSize + WEBAUDIO_BLOCK_SIZE,
+            );
             this.inputBuffers[inputIndex][i].fill(0);
         }
 
@@ -65,7 +67,10 @@ class OLAProcessor extends AudioWorkletProcessor {
         this.inputBuffersHead[inputIndex] = new Array(nbChannels);
         this.inputBuffersToSend[inputIndex] = new Array(nbChannels);
         for (var i = 0; i < nbChannels; i++) {
-            this.inputBuffersHead[inputIndex][i] = this.inputBuffers[inputIndex][i].subarray(0, this.blockSize);
+            this.inputBuffersHead[inputIndex][i] = this.inputBuffers[inputIndex][i].subarray(
+                0,
+                this.blockSize,
+            );
             this.inputBuffersToSend[inputIndex][i] = new Float32Array(this.blockSize);
         }
     }
@@ -150,7 +155,8 @@ class OLAProcessor extends AudioWorkletProcessor {
         for (var i = 0; i < this.nbOutputs; i++) {
             for (var j = 0; j < this.outputBuffers[i].length; j++) {
                 for (var k = 0; k < this.blockSize; k++) {
-                    this.outputBuffers[i][j][k] += this.outputBuffersToRetrieve[i][j][k] / this.nbOverlaps;
+                    this.outputBuffers[i][j][k] +=
+                        this.outputBuffersToRetrieve[i][j][k] / this.nbOverlaps;
                 }
             }
         }

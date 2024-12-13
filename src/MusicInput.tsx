@@ -56,7 +56,15 @@ const MusicInput = ({ multiple, setSelectedFiles, type, setSources }: MusicInput
 
     return (
         <>
-            <input ref={inputRef} onChange={handleFileChange} type="file" id="fileInput" accept="audio/*" hidden multiple={multiple} />
+            <input
+                ref={inputRef}
+                onChange={handleFileChange}
+                type="file"
+                id="fileInput"
+                accept="audio/*"
+                hidden
+                multiple={multiple}
+            />
             <button onClick={handleButtonClick} id="uploadBtn">
                 Select Audio File
             </button>

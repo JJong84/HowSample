@@ -16,7 +16,15 @@ interface SampleLineProps {
 }
 
 // 1분 정도로 잡기
-const SamplingLine = ({ id, sources, line, onDragOver, onDrop, totalTime, pixelPerSecond }: SampleLineProps) => {
+const SamplingLine = ({
+    id,
+    sources,
+    line,
+    onDragOver,
+    onDrop,
+    totalTime,
+    pixelPerSecond,
+}: SampleLineProps) => {
     const lineRef = useRef<HTMLDivElement>(null);
 
     const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
@@ -39,11 +47,21 @@ const SamplingLine = ({ id, sources, line, onDragOver, onDrop, totalTime, pixelP
 
     return (
         <>
-            <div style={{ width: pixelPerSecond * totalTime }} className="line" ref={lineRef} onDragOver={onDragOver} onDrop={(e) => handleDrop(e)}>
+            <div
+                style={{ width: pixelPerSecond * totalTime }}
+                className="line"
+                ref={lineRef}
+                onDragOver={onDragOver}
+                onDrop={(e) => handleDrop(e)}
+            >
                 {samples.map(
                     ({ source, startTime }) =>
                         source && (
-                            <div key={source.id as string} className="waveform-container" style={{ left: startTime * pixelPerSecond }}>
+                            <div
+                                key={source.id as string}
+                                className="waveform-container"
+                                style={{ left: startTime * pixelPerSecond }}
+                            >
                                 <WaveForm data={source} pixelPerSecond={pixelPerSecond} />
                             </div>
                         ),

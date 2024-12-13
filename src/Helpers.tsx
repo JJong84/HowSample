@@ -10,7 +10,11 @@ const fileToArrayBuffer = (file: File) => {
     });
 };
 
-const makeSampleData = (f: File, audioContext: AudioContext, type: UploadedMusicType): Promise<SampleData> => {
+const makeSampleData = (
+    f: File,
+    audioContext: AudioContext,
+    type: UploadedMusicType,
+): Promise<SampleData> => {
     return fileToArrayBuffer(f)
         .then((arrayBuffer) => audioContext.decodeAudioData(arrayBuffer))
         .then((audioBuffer) => {
@@ -42,7 +46,11 @@ const publicFileToArrayBuffer = (address: string) => {
     });
 };
 
-const makeSampleDataFromPublicFile = (address: string, audioContext: AudioContext, type: UploadedMusicType): Promise<SampleData> => {
+const makeSampleDataFromPublicFile = (
+    address: string,
+    audioContext: AudioContext,
+    type: UploadedMusicType,
+): Promise<SampleData> => {
     return publicFileToArrayBuffer(address)
         .then((arrayBuffer) => audioContext.decodeAudioData(arrayBuffer))
         .then((audioBuffer) => {

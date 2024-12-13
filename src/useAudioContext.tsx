@@ -2,7 +2,10 @@ import { createContext, useContext, useMemo } from 'react';
 import { publicUrl } from './Helpers';
 
 // AudioContext 생성 및 관리
-const AudioContextContext = createContext<{ audioContext: AudioContext; createPitchShiftNode: (speed: number, pitch: number) => AudioWorkletNode } | null>(null);
+const AudioContextContext = createContext<{
+    audioContext: AudioContext;
+    createPitchShiftNode: (speed: number, pitch: number) => AudioWorkletNode;
+} | null>(null);
 
 export const AudioContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const audioContext = useMemo(() => {
@@ -18,7 +21,11 @@ export const AudioContextProvider: React.FC<{ children: React.ReactNode }> = ({ 
         return new AudioWorkletNode(audioContext, 'phase-vocoder-processor');
     };
 
-    return <AudioContextContext.Provider value={{ audioContext, createPitchShiftNode }}>{children}</AudioContextContext.Provider>;
+    return (
+        <AudioContextContext.Provider value={{ audioContext, createPitchShiftNode }}>
+            {children}
+        </AudioContextContext.Provider>
+    );
 };
 
 export const useAudioContext = () => {

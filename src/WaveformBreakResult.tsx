@@ -15,10 +15,22 @@ interface Props {
     setStartedTime: React.Dispatch<React.SetStateAction<number | null>>;
     playingId: string;
     setPlayingId: React.Dispatch<React.SetStateAction<string>>;
-    modified?: boolean; // modified with pitch and speed
 }
 
-const WaveformBreakResult = ({ playingId, setPlayingId, id, soundSource, setSoundSource, data, pixelPerSecond, currentRange, speed, pitch, startedTime, setStartedTime, modified }: Props) => {
+const WaveformBreakResult = ({
+    playingId,
+    setPlayingId,
+    id,
+    soundSource,
+    setSoundSource,
+    data,
+    pixelPerSecond,
+    currentRange,
+    speed,
+    pitch,
+    startedTime,
+    setStartedTime,
+}: Props) => {
     const { start: startPoint, end: endPoint } = currentRange;
 
     const { audioContext, createPitchShiftNode } = useAudioContext();
@@ -44,7 +56,8 @@ const WaveformBreakResult = ({ playingId, setPlayingId, id, soundSource, setSoun
         const updateAnimation = () => {
             if (playingId == id && startedTime && progressLineRef.current) {
                 // Calculate translateX based on AudioContext's currentTime
-                const translateX = (audioContext.currentTime - startedTime) * pixelPerSecond * speed;
+                const translateX =
+                    (audioContext.currentTime - startedTime) * pixelPerSecond * speed;
                 progressLineRef.current.style.transform = `translateX(${translateX}px)`;
             }
 
@@ -185,28 +198,10 @@ const WaveformBreakResult = ({ playingId, setPlayingId, id, soundSource, setSoun
         }
     };
 
-    const formatTime = (seconds: number): string => {
-        const minutes = Math.floor(seconds / 60);
-        const remainingSeconds = Math.floor(seconds % 60);
-        return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
-    };
-
-    // 범위를 "분:초 - 분:초"로 변환
-    const formatRange = (currentRange: SampleRange): string => {
-        return `${formatTime(currentRange.start)} - ${formatTime(currentRange.end)}`;
-    };
-
     return (
         <div className="waveform-container">
             <div ref={progressLineRef} className="progress-line" />
             <canvas onClick={handleCanvasClick} className="waveform" ref={waveformRef} />
-            <div>{formatRange(currentRange)}</div>
-            {modified && (
-                <>
-                    <div>{`speed: ${speed.toFixed(2)}x`}</div>
-                    <div>{`pitch: ${pitch} semitones`}</div>
-                </>
-            )}
         </div>
     );
 };

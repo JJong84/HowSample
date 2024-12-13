@@ -7,7 +7,17 @@ import { useEffect, useRef, useState } from 'react';
 import { useAddSourceModal } from './useAddSourceModal';
 import SamplingLine from './SampleLine';
 import { UUIDTypes, v4 } from 'uuid';
-import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import {
+    Button,
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Typography,
+} from '@mui/material';
 import './style/sampling.css';
 
 interface SamplingModeProps {
@@ -19,7 +29,14 @@ interface SamplingModeProps {
     setLines: React.Dispatch<React.SetStateAction<Line[]>>;
 }
 
-const SamplingMode = ({ selectedFiles, setSelectedFiles, sources, setSources, lines, setLines }: SamplingModeProps) => {
+const SamplingMode = ({
+    selectedFiles,
+    setSelectedFiles,
+    sources,
+    setSources,
+    lines,
+    setLines,
+}: SamplingModeProps) => {
     const { audioContext, createPitchShiftNode } = useAudioContext();
     const { isModalOpen } = useAddSourceModal();
 
@@ -193,7 +210,12 @@ const SamplingMode = ({ selectedFiles, setSelectedFiles, sources, setSources, li
                 ))}
             </div>
             <Button onClick={handleAddLineClick}>ADD Line</Button>
-            <MusicInput setSources={setSources} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} type="user" />
+            <MusicInput
+                setSources={setSources}
+                selectedFiles={selectedFiles}
+                setSelectedFiles={setSelectedFiles}
+                type="user"
+            />
             <div>
                 <Typography variant="h6" sx={{ marginBottom: 2 }}>
                     Added Tracks
@@ -212,7 +234,10 @@ const SamplingMode = ({ selectedFiles, setSelectedFiles, sources, setSources, li
                         </TableHead>
                         <TableBody>
                             {sources.map((source) => (
-                                <TableRow key={source.id.toString()} onClick={() => handleSourceClick(source)}>
+                                <TableRow
+                                    key={source.id.toString()}
+                                    onClick={() => handleSourceClick(source)}
+                                >
                                     <TableCell>
                                         <div
                                             draggable

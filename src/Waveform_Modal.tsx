@@ -43,7 +43,8 @@ const WaveForm = forwardRef<WaveformHandle, Props>(({ data, pixelPerSecond }: Pr
 
     useEffect(() => {
         if (startedTime && progressLineRef.current) {
-            const transformMatch = progressLineRef.current.style.transform.match(/translateX\(([-\d.]+)px\)/);
+            const transformMatch =
+                progressLineRef.current.style.transform.match(/translateX\(([-\d.]+)px\)/);
             const leftMatch = progressLineRef.current.style.left.match(/([-\d.]+)px/);
 
             const translateX = transformMatch ? parseFloat(transformMatch[1]) : 0;
@@ -70,7 +71,8 @@ const WaveForm = forwardRef<WaveformHandle, Props>(({ data, pixelPerSecond }: Pr
         const updateAnimation = () => {
             if (startedTime && progressLineRef.current) {
                 // Calculate translateX based on AudioContext's currentTime
-                const translateX = (audioContext.currentTime - startedTime) * pixelPerSecond * speed;
+                const translateX =
+                    (audioContext.currentTime - startedTime) * pixelPerSecond * speed;
                 progressLineRef.current.style.transform = `translateX(${translateX}px)`;
             }
 
@@ -267,7 +269,13 @@ const WaveForm = forwardRef<WaveformHandle, Props>(({ data, pixelPerSecond }: Pr
     return (
         <>
             <div ref={progressLineRef} className="progress-line" />
-            <div ref={dragRef} className="drag" onClick={handleDragClick} onMouseMove={handleDragging} onMouseLeave={handleDragEnd}>
+            <div
+                ref={dragRef}
+                className="drag"
+                onClick={handleDragClick}
+                onMouseMove={handleDragging}
+                onMouseLeave={handleDragEnd}
+            >
                 {dragStartX !== null && dragEndX !== null && (
                     <div
                         className="dragged"

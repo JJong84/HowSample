@@ -54,4 +54,13 @@ type BreakResponse = {
     sampleId?: UUIDTypes;
 }[];
 
-export type { SampleRange, SampleData, UploadedMusic, UploadedMusicType, SampleLine, Line, WaveformHandle, BreakResponse };
+export type {
+    SampleRange,
+    SampleData,
+    UploadedMusic,
+    UploadedMusicType,
+    SampleLine,
+    Line,
+    WaveformHandle,
+    BreakResponse,
+};
