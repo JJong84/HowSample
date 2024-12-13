@@ -10,12 +10,12 @@
 
 // const SampleBreakResult = ({breakResults}: SampleBreakModeProps) => {
 //   const {audioContext, createPitchShiftNode} = useAudioContext();
-  
+
 //     const handlePlayClick = () => {
 //       breakResults.forEach((result) => {
 //         const sourceNode = audioContext.createBufferSource();
 //         sourceNode.buffer = result.source.audioBuffer;
-        
+
 //         const {speed, pitch, startPoint, endPoint} = result.source;
 //         const node = createPitchShiftNode(speed, pitch);
 //         const startTime = result.offset + audioContext.currentTime;
@@ -37,7 +37,7 @@
 //     return <div className="sample-break-result">
 //       <Button onClick={handlePlayClick}>Play All</Button>
 //         {
-//           usedSources.map((source) => 
+//           usedSources.map((source) =>
 //             <WaveForm id={source.id} data={source} pixelPerSecond={10} />
 //           )
 //         }

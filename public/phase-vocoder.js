@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-import FFT from "./fft.js";
+import FFT from './fft.js';
 import OLAProcessor from './ola-processor.js';
 
 const BUFFERED_BLOCK_SIZE = 2048;
@@ -8,17 +8,19 @@ const BUFFERED_BLOCK_SIZE = 2048;
 function genHannWindow(length) {
     let win = new Float32Array(length);
     for (var i = 0; i < length; i++) {
-        win[i] = 0.5 * (1 - Math.cos(2 * Math.PI * i / length));
+        win[i] = 0.5 * (1 - Math.cos((2 * Math.PI * i) / length));
     }
     return win;
 }
 
 class PhaseVocoderProcessor extends OLAProcessor {
     static get parameterDescriptors() {
-        return [{
-            name: 'pitchFactor',
-            defaultValue: 1.0
-        }];
+        return [
+            {
+                name: 'pitchFactor',
+                defaultValue: 1.0,
+            },
+        ];
     }
 
     constructor(options) {
@@ -80,14 +82,15 @@ class PhaseVocoderProcessor extends OLAProcessor {
 
     /** Compute squared magnitudes for peak finding **/
     computeMagnitudes() {
-        var i = 0, j = 0;
+        var i = 0,
+            j = 0;
         while (i < this.magnitudes.length) {
             let real = this.freqComplexBuffer[j];
             let imag = this.freqComplexBuffer[j + 1];
             // no need to sqrt for peak finding
             this.magnitudes[i] = real ** 2 + imag ** 2;
-            i+=1;
-            j+=2;
+            i += 1;
+            j += 2;
         }
     }
 
@@ -152,7 +155,7 @@ class PhaseVocoderProcessor extends OLAProcessor {
                 }
 
                 // apply phase correction
-                let omegaDelta = 2 * Math.PI * (binIndexShifted - binIndex) / this.fftSize;
+                let omegaDelta = (2 * Math.PI * (binIndexShifted - binIndex)) / this.fftSize;
                 let phaseShiftReal = Math.cos(omegaDelta * this.timeCursor);
                 let phaseShiftImag = Math.sin(omegaDelta * this.timeCursor);
 
@@ -173,4 +176,4 @@ class PhaseVocoderProcessor extends OLAProcessor {
     }
 }
 
-registerProcessor("phase-vocoder-processor", PhaseVocoderProcessor);
+registerProcessor('phase-vocoder-processor', PhaseVocoderProcessor);

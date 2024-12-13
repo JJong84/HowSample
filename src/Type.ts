@@ -1,31 +1,31 @@
-import { UUIDTypes } from "uuid";
+import { UUIDTypes } from 'uuid';
 
 interface SampleData {
-    name: string,
-    audioBuffer: AudioBuffer,
-    pitch: number,
-    speed: number,
-    startPoint: number, // cut start
-    endPoint: number, // cut end,
-    offset?: number, // position in the global buffer
-    edited: boolean, // check if source is edited by user or not,
-    type: UploadedMusicType,
-    id: UUIDTypes
+    name: string;
+    audioBuffer: AudioBuffer;
+    pitch: number;
+    speed: number;
+    startPoint: number; // cut start
+    endPoint: number; // cut end,
+    offset?: number; // position in the global buffer
+    edited: boolean; // check if source is edited by user or not,
+    type: UploadedMusicType;
+    id: UUIDTypes;
 }
 
 // sampled - sampled music to find
 // target - music which used sampling
 // user - user uploaded source to make music
-type UploadedMusicType = "sampled" | "user" | "target" | "break_result"
+type UploadedMusicType = 'sampled' | 'user' | 'target' | 'break_result';
 
 interface UploadedMusic {
-    file: File,
-    type: UploadedMusicType
+    file: File;
+    type: UploadedMusicType;
 }
 
 interface SampleLine {
-    sampleDataId: UUIDTypes,
-    startTime: number
+    sampleDataId: UUIDTypes;
+    startTime: number;
 }
 
 interface Line {
@@ -54,4 +54,4 @@ type BreakResponse = {
     sampleId?: UUIDTypes;
 }[];
 
-export type {SampleRange, SampleData, UploadedMusic, UploadedMusicType, SampleLine, Line, WaveformHandle, BreakResponse}
+export type { SampleRange, SampleData, UploadedMusic, UploadedMusicType, SampleLine, Line, WaveformHandle, BreakResponse };

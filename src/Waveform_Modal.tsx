@@ -1,22 +1,22 @@
-import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
-import { SampleData, WaveformHandle } from "./Type";
-import { useAudioContext } from "./useAudioContext";
-import { UUIDTypes } from "uuid";
-import { useAddSourceModal } from "./useAddSourceModal";
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { SampleData, WaveformHandle } from './Type';
+import { useAudioContext } from './useAudioContext';
+import { UUIDTypes } from 'uuid';
+import { useAddSourceModal } from './useAddSourceModal';
 
 interface Props {
-    data: SampleData,
-    pixelPerSecond: number,
-    id?: UUIDTypes,
-    speed: number,
-    pitch: number,
-}  
+    data: SampleData;
+    pixelPerSecond: number;
+    id?: UUIDTypes;
+    speed: number;
+    pitch: number;
+}
 
-const WaveForm = forwardRef<WaveformHandle, Props>(({data, pixelPerSecond}: Props, ref) => {
+const WaveForm = forwardRef<WaveformHandle, Props>(({ data, pixelPerSecond }: Props, ref) => {
     const { speed, pitch, setStartPoint, setEndPoint, startPoint, endPoint } = useAddSourceModal();
-    
-    const {audioContext, createPitchShiftNode} = useAudioContext();
-    const {audioBuffer} = data;
+
+    const { audioContext, createPitchShiftNode } = useAudioContext();
+    const { audioBuffer } = data;
     const waveformRef = useRef<HTMLCanvasElement>(null);
     const progressLineRef = useRef<HTMLDivElement>(null);
 
@@ -52,7 +52,7 @@ const WaveForm = forwardRef<WaveformHandle, Props>(({data, pixelPerSecond}: Prop
             console.log(translateX, left);
 
             progressLineRef.current.style.left = `${left + translateX}px`;
-            progressLineRef.current.style.transform = "";
+            progressLineRef.current.style.transform = '';
             setStartedTime(audioContext.currentTime);
         }
     }, [speed]);
@@ -61,17 +61,17 @@ const WaveForm = forwardRef<WaveformHandle, Props>(({data, pixelPerSecond}: Prop
         let animationFrameId: number;
 
         if (startedTime && progressLineRef.current) {
-            progressLineRef.current.style.visibility = "visible";
+            progressLineRef.current.style.visibility = 'visible';
         } else if (progressLineRef.current) {
             progressLineRef.current.style.left = `${startPoint * pixelPerSecond}px`;
-            progressLineRef.current.style.visibility = "hidden";
+            progressLineRef.current.style.visibility = 'hidden';
         }
 
         const updateAnimation = () => {
             if (startedTime && progressLineRef.current) {
-            // Calculate translateX based on AudioContext's currentTime
-            const translateX = (audioContext.currentTime - startedTime) * pixelPerSecond * speed;
-            progressLineRef.current.style.transform = `translateX(${translateX}px)`;
+                // Calculate translateX based on AudioContext's currentTime
+                const translateX = (audioContext.currentTime - startedTime) * pixelPerSecond * speed;
+                progressLineRef.current.style.transform = `translateX(${translateX}px)`;
             }
 
             animationFrameId = requestAnimationFrame(updateAnimation);
@@ -84,7 +84,6 @@ const WaveForm = forwardRef<WaveformHandle, Props>(({data, pixelPerSecond}: Prop
             cancelAnimationFrame(animationFrameId);
         };
     }, [startedTime, audioContext, speed]);
-    
 
     useEffect(() => {
         const canvas = waveformRef.current;
@@ -112,7 +111,7 @@ const WaveForm = forwardRef<WaveformHandle, Props>(({data, pixelPerSecond}: Prop
         if (isFixed) {
             if (progressLineRef.current) {
                 progressLineRef.current.style.left = `${startPoint * pixelPerSecond}px`;
-                progressLineRef.current.style.transform = "";
+                progressLineRef.current.style.transform = '';
             }
         }
     }, [isFixed, startPoint, pixelPerSecond]);
@@ -150,11 +149,11 @@ const WaveForm = forwardRef<WaveformHandle, Props>(({data, pixelPerSecond}: Prop
         canvasContext.clearRect(0, 0, WIDTH, HEIGHT);
 
         // Clear
-        canvasContext.fillStyle = "rgba(0, 0, 0, 0.2)";
+        canvasContext.fillStyle = 'rgba(0, 0, 0, 0.2)';
         canvasContext.fillRect(0, 0, WIDTH, HEIGHT);
 
         // Draw waveform
-        canvasContext.strokeStyle = "rgba(0, 0, 0, 0.8)";
+        canvasContext.strokeStyle = 'rgba(0, 0, 0, 0.8)';
         waveform.forEach((point, i) => {
             const x = i;
             const yMin = ((1 + point.min) / 2) * HEIGHT;
@@ -165,14 +164,14 @@ const WaveForm = forwardRef<WaveformHandle, Props>(({data, pixelPerSecond}: Prop
             canvasContext.lineTo(x, yMax);
             canvasContext.stroke();
         });
-    }
+    };
 
     const stop = () => {
         soundSource?.stop();
         soundSource?.disconnect();
         setSoundSource(null);
         setStartedTime(null);
-    }
+    };
 
     const start = () => {
         const source = audioContext.createBufferSource();
@@ -181,7 +180,7 @@ const WaveForm = forwardRef<WaveformHandle, Props>(({data, pixelPerSecond}: Prop
         const node = createPitchShiftNode(speed, pitch);
         setPitchShiftNode(node);
         source.connect(node).connect(audioContext.destination);
-        
+
         const pitchFactorParam = node?.parameters.get('pitchFactor');
         if (!pitchFactorParam) {
             console.log('no pitch factor or soudsource');
@@ -193,13 +192,13 @@ const WaveForm = forwardRef<WaveformHandle, Props>(({data, pixelPerSecond}: Prop
 
         source.start(0, startPoint, endPoint - startPoint);
 
-        source.addEventListener("ended", () => {
+        source.addEventListener('ended', () => {
             stop();
         });
-    
+
         setStartedTime(audioContext.currentTime);
         return source;
-    }
+    };
 
     const playStop = () => {
         if (soundSource) {
@@ -208,15 +207,15 @@ const WaveForm = forwardRef<WaveformHandle, Props>(({data, pixelPerSecond}: Prop
             const source = start();
             setSoundSource(source);
         }
-    }
+    };
 
     useEffect(() => {
         if (!dragStartX || !dragEndX || !isFixed) {
             return;
         }
         stop();
-        const startTime = (dragStartX / pixelPerSecond);
-        const endTime = (dragEndX / pixelPerSecond);
+        const startTime = dragStartX / pixelPerSecond;
+        const endTime = dragEndX / pixelPerSecond;
         setStartPoint(Math.min(startTime, endTime));
         setEndPoint(Math.max(startTime, endTime));
     }, [isFixed, dragStartX, dragEndX, pixelPerSecond]);
@@ -230,12 +229,12 @@ const WaveForm = forwardRef<WaveformHandle, Props>(({data, pixelPerSecond}: Prop
         }
         pitchFactorParam.value = Math.pow(2, pitch / 12) / speed;
         soundSource.playbackRate.value = speed;
-    }
+    };
 
-    const {openModal} = useAddSourceModal();
+    const { openModal } = useAddSourceModal();
     const handleCanvasClick = () => {
         openModal(data, false);
-    }
+    };
 
     const handleDragging = (event: React.MouseEvent) => {
         event.stopPropagation();
@@ -263,29 +262,25 @@ const WaveForm = forwardRef<WaveformHandle, Props>(({data, pixelPerSecond}: Prop
         } else if (dragEndX !== null) {
             setIsFixed(true);
         }
-    }
+    };
 
-    return <>
-        <div ref={progressLineRef} className="progress-line" />
-        <div
-            ref={dragRef}
-            className="drag"
-            onClick={handleDragClick}
-            onMouseMove={handleDragging}
-            onMouseLeave={handleDragEnd}
-            >
-            {dragStartX !== null && dragEndX !== null && (
-                <div
-                    className="dragged"
-                    style={{
-                        left: Math.min(dragStartX, dragEndX),
-                        width: Math.abs(dragEndX - dragStartX),
-                    }}
-                />
-            )}
-        </div>
-        <canvas onClick={handleCanvasClick} className="waveform" ref={waveformRef} />
-    </>
+    return (
+        <>
+            <div ref={progressLineRef} className="progress-line" />
+            <div ref={dragRef} className="drag" onClick={handleDragClick} onMouseMove={handleDragging} onMouseLeave={handleDragEnd}>
+                {dragStartX !== null && dragEndX !== null && (
+                    <div
+                        className="dragged"
+                        style={{
+                            left: Math.min(dragStartX, dragEndX),
+                            width: Math.abs(dragEndX - dragStartX),
+                        }}
+                    />
+                )}
+            </div>
+            <canvas onClick={handleCanvasClick} className="waveform" ref={waveformRef} />
+        </>
+    );
 });
 
 export default WaveForm;

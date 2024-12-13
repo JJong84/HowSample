@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 const WEBAUDIO_BLOCK_SIZE = 128;
 
@@ -11,7 +11,7 @@ class OLAProcessor extends AudioWorkletProcessor {
         this.nbOutputs = options.numberOfOutputs;
 
         this.blockSize = options.processorOptions.blockSize;
-         // TODO for now, the only support hop size is the size of a web audio block
+        // TODO for now, the only support hop size is the size of a web audio block
         this.hopSize = WEBAUDIO_BLOCK_SIZE;
 
         this.nbOverlaps = this.blockSize / this.hopSize;
@@ -65,7 +65,7 @@ class OLAProcessor extends AudioWorkletProcessor {
         this.inputBuffersHead[inputIndex] = new Array(nbChannels);
         this.inputBuffersToSend[inputIndex] = new Array(nbChannels);
         for (var i = 0; i < nbChannels; i++) {
-            this.inputBuffersHead[inputIndex][i] = this.inputBuffers[inputIndex][i] .subarray(0, this.blockSize);
+            this.inputBuffersHead[inputIndex][i] = this.inputBuffers[inputIndex][i].subarray(0, this.blockSize);
             this.inputBuffersToSend[inputIndex][i] = new Float32Array(this.blockSize);
         }
     }
@@ -161,7 +161,7 @@ class OLAProcessor extends AudioWorkletProcessor {
 
         this.readInputs(inputs);
         this.shiftInputBuffers();
-        this.prepareInputBuffersToSend()
+        this.prepareInputBuffersToSend();
         this.processOLA(this.inputBuffersToSend, this.outputBuffersToRetrieve, params);
         this.handleOutputBuffersToRetrieve();
         this.writeOutputs(outputs);
@@ -171,7 +171,7 @@ class OLAProcessor extends AudioWorkletProcessor {
     }
 
     processOLA(inputs, outputs, params) {
-        console.assert(false, "Not overriden");
+        console.assert(false, 'Not overriden');
     }
 }
 

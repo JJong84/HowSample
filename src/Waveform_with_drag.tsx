@@ -1,33 +1,33 @@
-import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
-import { SampleData, WaveformHandle } from "./Type";
-import { useAudioContext } from "./useAudioContext";
-import { UUIDTypes } from "uuid";
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { SampleData, WaveformHandle } from './Type';
+import { useAudioContext } from './useAudioContext';
+import { UUIDTypes } from 'uuid';
 
 interface Props {
-    data: SampleData,
-    isMovable?: boolean,
-    isExpandable?: boolean, // 좌우 속도 조절 기능
-    isCuttable?: boolean, // 자를 수 있는지
-    pixelPerSecond: number,
-    id?: UUIDTypes
-}  
+    data: SampleData;
+    isMovable?: boolean;
+    isExpandable?: boolean; // 좌우 속도 조절 기능
+    isCuttable?: boolean; // 자를 수 있는지
+    pixelPerSecond: number;
+    id?: UUIDTypes;
+}
 
 const MIN_SPEED = 0.2;
 const MAX_SPEED = 2.0;
 
-const WaveForm = forwardRef<WaveformHandle, Props>(({data, isExpandable, pixelPerSecond}: Props, ref) => {
-    const {audioContext, createPitchShiftNode} = useAudioContext();
-    const {audioBuffer, pitch: initialPitch, speed: initialSpeed, startPoint} = data;
+const WaveForm = forwardRef<WaveformHandle, Props>(({ data, isExpandable, pixelPerSecond }: Props, ref) => {
+    const { audioContext, createPitchShiftNode } = useAudioContext();
+    const { audioBuffer, pitch: initialPitch, speed: initialSpeed, startPoint } = data;
     const waveformRef = useRef<HTMLCanvasElement>(null);
 
-    const [dragging, setDragging] = useState<"left" | "right" | null>(null);
+    const [dragging, setDragging] = useState<'left' | 'right' | null>(null);
     const [speed, setSpeed] = useState(initialSpeed);
     const [pitch, setPitch] = useState(initialPitch);
 
     const [soundSource, setSoundSource] = useState<AudioBufferSourceNode | null>();
     const [pitchShiftNode, setPitchShiftNode] = useState<AudioWorkletNode | null>();
 
-    const handleWidth = 10; 
+    const handleWidth = 10;
     const duration = audioBuffer.duration; // FIXME: !
 
     useImperativeHandle(ref, () => ({
@@ -62,7 +62,7 @@ const WaveForm = forwardRef<WaveformHandle, Props>(({data, isExpandable, pixelPe
             const source = start();
             setSoundSource(source);
         }
-    }
+    };
 
     const draw = () => {
         if (!waveformRef.current) {
@@ -99,11 +99,11 @@ const WaveForm = forwardRef<WaveformHandle, Props>(({data, isExpandable, pixelPe
         canvasContext.clearRect(0, 0, WIDTH, HEIGHT);
 
         // Clear
-        canvasContext.fillStyle = "rgb(256 256 256)";
+        canvasContext.fillStyle = 'rgb(256 256 256)';
         canvasContext.fillRect(0, 0, WIDTH, HEIGHT);
 
         // Draw waveform
-        canvasContext.strokeStyle = "black";
+        canvasContext.strokeStyle = 'black';
         waveform.forEach((point, i) => {
             const x = i;
             const yMin = ((1 + point.min) / 2) * HEIGHT;
@@ -117,11 +117,11 @@ const WaveForm = forwardRef<WaveformHandle, Props>(({data, isExpandable, pixelPe
 
         if (isExpandable) {
             // 핸들 그리기
-            canvasContext.fillStyle = "red";
+            canvasContext.fillStyle = 'red';
             canvasContext.fillRect(0 - handleWidth / 2, 0, handleWidth, HEIGHT); // 왼쪽 핸들
             canvasContext.fillRect(WIDTH - handleWidth / 2, 0, handleWidth, HEIGHT); // 오른쪽 핸들
         }
-    }
+    };
 
     const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
         if (!isExpandable) {
@@ -129,33 +129,33 @@ const WaveForm = forwardRef<WaveformHandle, Props>(({data, isExpandable, pixelPe
         }
         const canvas = waveformRef.current;
         if (!canvas) return;
-    
+
         const rect = canvas.getBoundingClientRect();
         const x = e.clientX - rect.left;
-    
+
         const WIDTH = canvas.width;
-    
+
         // Determine which handle is being dragged
         if (x >= 0 - handleWidth && x <= handleWidth) {
-          setDragging("left");
+            setDragging('left');
         } else if (x >= WIDTH - handleWidth && x <= WIDTH + handleWidth) {
-          setDragging("right");
+            setDragging('right');
         }
-      };
+    };
 
     const handleMouseMove = (e: MouseEvent) => {
         if (!dragging) return;
-    
+
         const canvas = waveformRef.current;
         if (!canvas) return;
-    
+
         const rect = canvas.getBoundingClientRect();
         let new_width = 0;
-        const original_width = duration * pixelPerSecond; 
+        const original_width = duration * pixelPerSecond;
 
-        if (dragging === "left") {
+        if (dragging === 'left') {
             new_width = rect.right - e.clientX;
-        } else if (dragging === "right") {
+        } else if (dragging === 'right') {
             new_width = e.clientX - rect.left;
         }
 
@@ -168,27 +168,27 @@ const WaveForm = forwardRef<WaveformHandle, Props>(({data, isExpandable, pixelPe
 
         const newSpeed = original_width / new_width;
         setSpeed(newSpeed);
-      };
-    
-      const handleMouseUp = () => {
-        setDragging(null);
-      };
+    };
 
-      useEffect(() => {
+    const handleMouseUp = () => {
+        setDragging(null);
+    };
+
+    useEffect(() => {
         if (isExpandable) {
-            window.addEventListener("mousemove", handleMouseMove);
-            window.addEventListener("mouseup", handleMouseUp);
+            window.addEventListener('mousemove', handleMouseMove);
+            window.addEventListener('mouseup', handleMouseUp);
             return () => {
-              window.removeEventListener("mousemove", handleMouseMove);
-              window.removeEventListener("mouseup", handleMouseUp);
+                window.removeEventListener('mousemove', handleMouseMove);
+                window.removeEventListener('mouseup', handleMouseUp);
             };
         }
-      }, [dragging, speed, isExpandable]);
+    }, [dragging, speed, isExpandable]);
 
     const stop = () => {
         soundSource?.stop();
         soundSource?.disconnect();
-    }
+    };
 
     const start = () => {
         const source = audioContext.createBufferSource();
@@ -200,7 +200,7 @@ const WaveForm = forwardRef<WaveformHandle, Props>(({data, isExpandable, pixelPe
         source.playbackRate.value = speed;
         source?.start(startPoint);
         return source;
-    }
+    };
 
     // Function for message to node
     const setPitchAndSpeed = () => {
@@ -210,7 +210,7 @@ const WaveForm = forwardRef<WaveformHandle, Props>(({data, isExpandable, pixelPe
         }
         pitchFactorParam.value = Math.pow(2, pitch / 12) / speed;
         soundSource.playbackRate.value = speed;
-    }
+    };
 
     // const start = () => {
     //     const source = audioContext.createBufferSource();
@@ -226,11 +226,11 @@ const WaveForm = forwardRef<WaveformHandle, Props>(({data, isExpandable, pixelPe
 
     const changeSpeed = (value: number) => {
         setSpeed(value);
-    }
+    };
 
     const changePitch = (value: number) => {
         setPitch(value);
-    }
+    };
 
     const handleClickPlay = () => {
         if (soundSource) {
@@ -242,10 +242,12 @@ const WaveForm = forwardRef<WaveformHandle, Props>(({data, isExpandable, pixelPe
         }
     };
 
-    return <>
-        <button onClick={handleClickPlay}>Play Music</button>
-        <canvas ref={waveformRef} onMouseDown={handleMouseDown} />
-    </>
+    return (
+        <>
+            <button onClick={handleClickPlay}>Play Music</button>
+            <canvas ref={waveformRef} onMouseDown={handleMouseDown} />
+        </>
+    );
 });
 
 export default WaveForm;

@@ -1,14 +1,14 @@
 // interface SamplingModeProps {
 
-import { Line, SampleData, UploadedMusic } from "./Type";
-import MusicInput from "./MusicInput";
-import { useAudioContext } from "./useAudioContext";
-import { useEffect, useRef, useState } from "react";
-import { useAddSourceModal } from "./useAddSourceModal";
-import SamplingLine from "./SampleLine";
-import { UUIDTypes, v4 } from "uuid";
-import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
-import "./style/sampling.css";
+import { Line, SampleData, UploadedMusic } from './Type';
+import MusicInput from './MusicInput';
+import { useAudioContext } from './useAudioContext';
+import { useEffect, useRef, useState } from 'react';
+import { useAddSourceModal } from './useAddSourceModal';
+import SamplingLine from './SampleLine';
+import { UUIDTypes, v4 } from 'uuid';
+import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import './style/sampling.css';
 
 interface SamplingModeProps {
     selectedFiles: UploadedMusic[];
@@ -19,15 +19,15 @@ interface SamplingModeProps {
     setLines: React.Dispatch<React.SetStateAction<Line[]>>;
 }
 
-const SamplingMode = ({selectedFiles, setSelectedFiles, sources, setSources, lines, setLines}: SamplingModeProps) => {
-    const {audioContext, createPitchShiftNode} = useAudioContext();
-    const {isModalOpen} = useAddSourceModal();
+const SamplingMode = ({ selectedFiles, setSelectedFiles, sources, setSources, lines, setLines }: SamplingModeProps) => {
+    const { audioContext, createPitchShiftNode } = useAudioContext();
+    const { isModalOpen } = useAddSourceModal();
 
-    const {openModal} = useAddSourceModal();
+    const { openModal } = useAddSourceModal();
     const [draggedAudioSource, setDraggedAudioSource] = useState<SampleData | null>(null);
     const [startedTime, setStartedTime] = useState<number | null>(null);
 
-    const [, setPlayingNodes] = useState<(AudioBufferSourceNode)[]>([]);
+    const [, setPlayingNodes] = useState<AudioBufferSourceNode[]>([]);
 
     useEffect(() => {
         if (isModalOpen) {
@@ -36,19 +36,22 @@ const SamplingMode = ({selectedFiles, setSelectedFiles, sources, setSources, lin
     }, [isModalOpen]);
 
     const handleAddLineClick = () => {
-        setLines(prev => [...prev, {
-            id: v4(),
-            sampleLines: [],
-        }]);
-    }
+        setLines((prev) => [
+            ...prev,
+            {
+                id: v4(),
+                sampleLines: [],
+            },
+        ]);
+    };
 
     const handleSourceClick = (source: SampleData) => {
         openModal(source, false);
-    }
+    };
 
     const handleDragStart = (source: SampleData) => {
         setDraggedAudioSource(source);
-    }
+    };
 
     const handleDrop = (droppedPosition: number, id: UUIDTypes) => {
         if (!draggedAudioSource) {
@@ -56,24 +59,27 @@ const SamplingMode = ({selectedFiles, setSelectedFiles, sources, setSources, lin
         }
 
         const startTime = droppedPosition;
-    
-        setLines((prev) => 
+
+        setLines((prev) =>
             prev.map((li) => {
                 if (li.id == id) {
                     return {
                         id,
-                        sampleLines: [...li.sampleLines, {
-                            startTime,
-                            sampleDataId: draggedAudioSource.id
-                        }]
-                    }
+                        sampleLines: [
+                            ...li.sampleLines,
+                            {
+                                startTime,
+                                sampleDataId: draggedAudioSource.id,
+                            },
+                        ],
+                    };
                 }
                 return li;
-            })
+            }),
         );
 
         setDraggedAudioSource(null);
-    }
+    };
 
     const intialize = () => {
         setStartedTime(null);
@@ -82,8 +88,8 @@ const SamplingMode = ({selectedFiles, setSelectedFiles, sources, setSources, lin
                 node.disconnect();
             });
             return [];
-        })
-    }
+        });
+    };
 
     const handlePlayClick = () => {
         if (startedTime) {
@@ -99,20 +105,20 @@ const SamplingMode = ({selectedFiles, setSelectedFiles, sources, setSources, lin
                     if (!targetSource) {
                         return;
                     }
-                    const {audioBuffer, pitch, speed, startPoint, endPoint} = targetSource;
+                    const { audioBuffer, pitch, speed, startPoint, endPoint } = targetSource;
                     sourceNode.buffer = audioBuffer;
-                
+
                     const startTime = sl.startTime + audioContext.currentTime;
-    
+
                     const node = createPitchShiftNode(speed, pitch);
-                    
+
                     const pitchFactorParam = node?.parameters.get('pitchFactor');
                     if (!pitchFactorParam) {
                         console.log('no pitch factor or soudsource in source node');
                     } else {
                         pitchFactorParam.value = Math.pow(2, pitch / 12) / speed;
                     }
-    
+
                     sourceNode.playbackRate.value = speed;
                     sourceNode.connect(node).connect(audioContext.destination);
                     sourceNode.start(startTime, startPoint, endPoint - startPoint);
@@ -122,19 +128,19 @@ const SamplingMode = ({selectedFiles, setSelectedFiles, sources, setSources, lin
                         lastSourceNode = sourceNode;
                         lastSourceNodeEndTime = endTime;
                     }
-                    
+
                     setPlayingNodes((prev) => [...prev, sourceNode]);
-                })
+                });
             });
             setStartedTime(audioContext.currentTime);
 
             if (lastSourceNode) {
-                (lastSourceNode as AudioBufferSourceNode).addEventListener("ended", () => {
+                (lastSourceNode as AudioBufferSourceNode).addEventListener('ended', () => {
                     intialize();
                 });
             }
         }
-    }
+    };
 
     const progressLineRef = useRef<HTMLDivElement>(null);
 
@@ -143,43 +149,37 @@ const SamplingMode = ({selectedFiles, setSelectedFiles, sources, setSources, lin
 
     useEffect(() => {
         let animationFrameId: number;
-    
+
         const updateAnimation = () => {
-          if (startedTime && progressLineRef.current) {
-            // Calculate translateX based on AudioContext's currentTime
-            const translateX = (audioContext.currentTime - startedTime) * PIXEL_PER_SECOND;
-            progressLineRef.current.style.transform = `translateX(${translateX}px)`;
-          }
-    
-          animationFrameId = requestAnimationFrame(updateAnimation);
+            if (startedTime && progressLineRef.current) {
+                // Calculate translateX based on AudioContext's currentTime
+                const translateX = (audioContext.currentTime - startedTime) * PIXEL_PER_SECOND;
+                progressLineRef.current.style.transform = `translateX(${translateX}px)`;
+            }
+
+            animationFrameId = requestAnimationFrame(updateAnimation);
         };
-    
+
         // Start the animation
         updateAnimation();
-    
+
         return () => {
-          cancelAnimationFrame(animationFrameId);
+            cancelAnimationFrame(animationFrameId);
         };
-      }, [startedTime, audioContext]);
+    }, [startedTime, audioContext]);
 
     const handleResetClick = () => {
         intialize();
-        setLines([{id: v4(), sampleLines: []}]);
-    }
+        setLines([{ id: v4(), sampleLines: [] }]);
+    };
 
-    return <>
-        <Button onClick={handleResetClick}>
-            Reset
-        </Button>
-        <Button onClick={handlePlayClick}>
-            Play
-        </Button>
-        <div className="lines-container">
-            <div
-                className="progress-line"
-                ref={progressLineRef} />
-            {
-                lines.map((li) =>
+    return (
+        <>
+            <Button onClick={handleResetClick}>Reset</Button>
+            <Button onClick={handlePlayClick}>Play</Button>
+            <div className="lines-container">
+                <div className="progress-line" ref={progressLineRef} />
+                {lines.map((li) => (
                     <SamplingLine
                         key={li.id as string}
                         id={li.id}
@@ -190,55 +190,55 @@ const SamplingMode = ({selectedFiles, setSelectedFiles, sources, setSources, lin
                         totalTime={TOTAL_TIME}
                         sources={sources}
                     />
-                )
-            }
-        </div>
-        <Button onClick={handleAddLineClick}>ADD Line</Button>
-        <MusicInput setSources={setSources} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} type='user'/>
-        <div>
-            <Typography variant="h6" sx={{ marginBottom: 2 }}>
-                Added Tracks
-            </Typography>
-            <TableContainer component={Paper}>
-                <Table>
-                <TableHead>
-                    <TableRow>
-                    <TableCell></TableCell>
-                    <TableCell>Name</TableCell>
-                    <TableCell>Speed</TableCell>
-                    <TableCell>Pitch</TableCell>
-                    <TableCell>Start Point</TableCell>
-                    <TableCell>End Point</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {sources.map((source) => (
-                    <TableRow key={source.id.toString()} onClick={() => handleSourceClick(source)}>
-                        <TableCell>
-                        <div
-                            draggable
-                            onDragStart={() => handleDragStart(source)}
-                            style={{
-                            cursor: "grab",
-                            color: "blue",
-                            textDecoration: "underline",
-                            }}
-                        >
-                            Drag Here
-                        </div>
-                        </TableCell>
-                        <TableCell>{source.name}</TableCell>
-                        <TableCell>{source.speed.toFixed(1)}x</TableCell>
-                        <TableCell>{source.pitch} semitones</TableCell>
-                        <TableCell>{source.startPoint.toFixed(3)} s</TableCell>
-                        <TableCell>{source.endPoint.toFixed(3)} s</TableCell>
-                    </TableRow>
-                    ))}
-                </TableBody>
-                </Table>
-            </TableContainer>
-        </div>
-    </>
-}
+                ))}
+            </div>
+            <Button onClick={handleAddLineClick}>ADD Line</Button>
+            <MusicInput setSources={setSources} selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} type="user" />
+            <div>
+                <Typography variant="h6" sx={{ marginBottom: 2 }}>
+                    Added Tracks
+                </Typography>
+                <TableContainer component={Paper}>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell></TableCell>
+                                <TableCell>Name</TableCell>
+                                <TableCell>Speed</TableCell>
+                                <TableCell>Pitch</TableCell>
+                                <TableCell>Start Point</TableCell>
+                                <TableCell>End Point</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {sources.map((source) => (
+                                <TableRow key={source.id.toString()} onClick={() => handleSourceClick(source)}>
+                                    <TableCell>
+                                        <div
+                                            draggable
+                                            onDragStart={() => handleDragStart(source)}
+                                            style={{
+                                                cursor: 'grab',
+                                                color: 'blue',
+                                                textDecoration: 'underline',
+                                            }}
+                                        >
+                                            Drag Here
+                                        </div>
+                                    </TableCell>
+                                    <TableCell>{source.name}</TableCell>
+                                    <TableCell>{source.speed.toFixed(1)}x</TableCell>
+                                    <TableCell>{source.pitch} semitones</TableCell>
+                                    <TableCell>{source.startPoint.toFixed(3)} s</TableCell>
+                                    <TableCell>{source.endPoint.toFixed(3)} s</TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </div>
+        </>
+    );
+};
 
 export default SamplingMode;

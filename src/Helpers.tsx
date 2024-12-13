@@ -1,5 +1,5 @@
-import { v4 } from "uuid";
-import { SampleData, UploadedMusicType } from "./Type";
+import { v4 } from 'uuid';
+import { SampleData, UploadedMusicType } from './Type';
 
 const fileToArrayBuffer = (file: File) => {
     return new Promise((resolve: (value: ArrayBuffer) => void, reject) => {
@@ -8,7 +8,7 @@ const fileToArrayBuffer = (file: File) => {
         reader.onerror = () => reject(reader.error); // 에러 처리
         reader.readAsArrayBuffer(file); // 파일을 ArrayBuffer로 읽기
     });
-}
+};
 
 const makeSampleData = (f: File, audioContext: AudioContext, type: UploadedMusicType): Promise<SampleData> => {
     return fileToArrayBuffer(f)
@@ -23,23 +23,24 @@ const makeSampleData = (f: File, audioContext: AudioContext, type: UploadedMusic
                 edited: false,
                 type,
                 name: f.name,
-                id: v4()
-            }
+                id: v4(),
+            };
         });
-}
+};
 
 const publicFileToArrayBuffer = (address: string) => {
     return new Promise((resolve: (value: ArrayBuffer) => void, reject) => {
-        fetch(`${publicUrl}/demo_audios/${address}`).then((res) => {
-            if (!res.ok) {
-                throw new Error(`Fail to load ${address}`);
-            }
-            return res.arrayBuffer();
-        })
-        .then((buffer) => resolve(buffer))
-        .catch((e) => reject(e));
+        fetch(`${publicUrl}/demo_audios/${address}`)
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error(`Fail to load ${address}`);
+                }
+                return res.arrayBuffer();
+            })
+            .then((buffer) => resolve(buffer))
+            .catch((e) => reject(e));
     });
-}
+};
 
 const makeSampleDataFromPublicFile = (address: string, audioContext: AudioContext, type: UploadedMusicType): Promise<SampleData> => {
     return publicFileToArrayBuffer(address)
@@ -54,11 +55,11 @@ const makeSampleDataFromPublicFile = (address: string, audioContext: AudioContex
                 edited: false,
                 type,
                 name: address,
-                id: v4()
-            }
+                id: v4(),
+            };
         });
-} 
+};
 
 const publicUrl = import.meta.env.BASE_URL;
 
-export {makeSampleData, makeSampleDataFromPublicFile, publicUrl};
+export { makeSampleData, makeSampleDataFromPublicFile, publicUrl };

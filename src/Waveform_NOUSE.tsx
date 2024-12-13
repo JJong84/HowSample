@@ -33,7 +33,7 @@
 //         if (!canvasContext) {
 //             return;
 //         }
-        
+
 //         const WIDTH = waveformRef.current?.width;
 //         const HEIGHT = waveformRef.current?.height;
 //         canvasContext.clearRect(0, 0, WIDTH, HEIGHT);
@@ -83,10 +83,10 @@
 //         for (let i = 0; i < bufferLength; i++) {
 //             // console.log(i, dataArray[i])
 //             barHeight = dataArray[i] / 2;
-          
+
 //             canvasContext.fillStyle = `rgb(${barHeight + 100} 50 50)`;
 //             canvasContext.fillRect(x, HEIGHT - barHeight / 2, barWidth, barHeight);
-          
+
 //             x += barWidth + 1;
 //         }
 //     }

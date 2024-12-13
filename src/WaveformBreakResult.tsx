@@ -1,11 +1,11 @@
-import { useEffect, useRef, useState } from "react";
-import { SampleData, SampleRange } from "./Type";
-import { useAudioContext } from "./useAudioContext";
+import { useEffect, useRef, useState } from 'react';
+import { SampleData, SampleRange } from './Type';
+import { useAudioContext } from './useAudioContext';
 
 interface Props {
-    data: SampleData,
-    pixelPerSecond: number,
-    id: string,
+    data: SampleData;
+    pixelPerSecond: number;
+    id: string;
     currentRange: SampleRange;
     speed: number;
     pitch: number;
@@ -18,11 +18,11 @@ interface Props {
     modified?: boolean; // modified with pitch and speed
 }
 
-const WaveformBreakResult = ({playingId, setPlayingId, id, soundSource, setSoundSource, data, pixelPerSecond, currentRange, speed, pitch, startedTime, setStartedTime, modified}: Props) => {
-    const {start: startPoint, end: endPoint} = currentRange;
-    
-    const {audioContext, createPitchShiftNode} = useAudioContext();
-    const {audioBuffer} = data;
+const WaveformBreakResult = ({ playingId, setPlayingId, id, soundSource, setSoundSource, data, pixelPerSecond, currentRange, speed, pitch, startedTime, setStartedTime, modified }: Props) => {
+    const { start: startPoint, end: endPoint } = currentRange;
+
+    const { audioContext, createPitchShiftNode } = useAudioContext();
+    const { audioBuffer } = data;
     const waveformRef = useRef<HTMLCanvasElement>(null);
     const progressLineRef = useRef<HTMLDivElement>(null);
 
@@ -36,16 +36,16 @@ const WaveformBreakResult = ({playingId, setPlayingId, id, soundSource, setSound
         let animationFrameId: number;
 
         if (playingId == id && startedTime && progressLineRef.current) {
-            progressLineRef.current.style.visibility = "visible";
+            progressLineRef.current.style.visibility = 'visible';
         } else if (progressLineRef.current) {
-            progressLineRef.current.style.visibility = "hidden";
+            progressLineRef.current.style.visibility = 'hidden';
         }
 
         const updateAnimation = () => {
             if (playingId == id && startedTime && progressLineRef.current) {
-            // Calculate translateX based on AudioContext's currentTime
-            const translateX = (audioContext.currentTime - startedTime) * pixelPerSecond * speed;
-            progressLineRef.current.style.transform = `translateX(${translateX}px)`;
+                // Calculate translateX based on AudioContext's currentTime
+                const translateX = (audioContext.currentTime - startedTime) * pixelPerSecond * speed;
+                progressLineRef.current.style.transform = `translateX(${translateX}px)`;
             }
 
             animationFrameId = requestAnimationFrame(updateAnimation);
@@ -58,13 +58,12 @@ const WaveformBreakResult = ({playingId, setPlayingId, id, soundSource, setSound
             cancelAnimationFrame(animationFrameId);
         };
     }, [startedTime, audioContext, speed, playingId, id]);
-    
 
     useEffect(() => {
         const canvas = waveformRef.current;
         if (!canvas) return;
 
-        const canvasWidth = Math.ceil((endPoint - startPoint) * pixelPerSecond / speed);
+        const canvasWidth = Math.ceil(((endPoint - startPoint) * pixelPerSecond) / speed);
         canvas.width = canvasWidth;
         canvas.style.width = `${canvasWidth}px`;
 
@@ -73,7 +72,7 @@ const WaveformBreakResult = ({playingId, setPlayingId, id, soundSource, setSound
 
     useEffect(() => {
         if (progressLineRef.current) {
-            progressLineRef.current.style.transform = "";
+            progressLineRef.current.style.transform = '';
         }
     }, [data, pixelPerSecond]);
 
@@ -110,11 +109,11 @@ const WaveformBreakResult = ({playingId, setPlayingId, id, soundSource, setSound
         canvasContext.clearRect(0, 0, WIDTH, HEIGHT);
 
         // Clear
-        canvasContext.fillStyle = "rgba(0, 0, 0, 0.2)";
+        canvasContext.fillStyle = 'rgba(0, 0, 0, 0.2)';
         canvasContext.fillRect(0, 0, WIDTH, HEIGHT);
 
         // Draw waveform
-        canvasContext.strokeStyle = "rgba(0, 0, 0, 0.8)";
+        canvasContext.strokeStyle = 'rgba(0, 0, 0, 0.8)';
         waveform.forEach((point, i) => {
             const x = i;
             const yMin = ((1 + point.min) / 2) * HEIGHT;
@@ -125,11 +124,11 @@ const WaveformBreakResult = ({playingId, setPlayingId, id, soundSource, setSound
             canvasContext.lineTo(x, yMax);
             canvasContext.stroke();
         });
-    }
+    };
 
     const handleStop = () => {
         soundSource?.disconnect();
-    }
+    };
 
     const start = () => {
         const source = audioContext.createBufferSource();
@@ -138,7 +137,7 @@ const WaveformBreakResult = ({playingId, setPlayingId, id, soundSource, setSound
         const node = createPitchShiftNode(speed, pitch);
         setPitchShiftNode(node);
         source.connect(node).connect(audioContext.destination);
-        
+
         const pitchFactorParam = node?.parameters.get('pitchFactor');
         if (!pitchFactorParam) {
             console.log('no pitch factor or soudsource');
@@ -150,15 +149,15 @@ const WaveformBreakResult = ({playingId, setPlayingId, id, soundSource, setSound
 
         source.start(0, startPoint, endPoint - startPoint);
 
-        source.addEventListener("ended", () => {
+        source.addEventListener('ended', () => {
             handleStop();
         });
-    
+
         setStartedTime(audioContext.currentTime);
         setSoundSource(source);
         setPlayingId(id);
         return source;
-    }
+    };
 
     // Function for message to node
     const setPitchAndSpeed = () => {
@@ -169,7 +168,7 @@ const WaveformBreakResult = ({playingId, setPlayingId, id, soundSource, setSound
         }
         pitchFactorParam.value = Math.pow(2, pitch / 12) / speed;
         soundSource.playbackRate.value = speed;
-    }
+    };
 
     const handleCanvasClick = () => {
         console.log(playingId, id);
@@ -179,36 +178,37 @@ const WaveformBreakResult = ({playingId, setPlayingId, id, soundSource, setSound
             soundSource?.stop();
             setSoundSource(null);
             setStartedTime(null);
-            setPlayingId("");
+            setPlayingId('');
         } else {
             soundSource?.stop();
             start();
         }
-    }
+    };
 
     const formatTime = (seconds: number): string => {
         const minutes = Math.floor(seconds / 60);
         const remainingSeconds = Math.floor(seconds % 60);
-        return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
-      };
-      
-      // 범위를 "분:초 - 분:초"로 변환
-      const formatRange = (currentRange: SampleRange): string => {
-        return `${formatTime(currentRange.start)} - ${formatTime(currentRange.end)}`;
-      };
-      
+        return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+    };
 
-    return <div className="waveform-container">
-        <div ref={progressLineRef} className="progress-line" />
-        <canvas onClick={handleCanvasClick} className="waveform" ref={waveformRef} />
-        <div>{formatRange(currentRange)}</div>
-        {
-            modified && <>
-                <div>{`speed: ${speed.toFixed(2)}x`}</div>
-                <div>{`pitch: ${pitch} semitones`}</div>
-            </>
-        }
-    </div>
+    // 범위를 "분:초 - 분:초"로 변환
+    const formatRange = (currentRange: SampleRange): string => {
+        return `${formatTime(currentRange.start)} - ${formatTime(currentRange.end)}`;
+    };
+
+    return (
+        <div className="waveform-container">
+            <div ref={progressLineRef} className="progress-line" />
+            <canvas onClick={handleCanvasClick} className="waveform" ref={waveformRef} />
+            <div>{formatRange(currentRange)}</div>
+            {modified && (
+                <>
+                    <div>{`speed: ${speed.toFixed(2)}x`}</div>
+                    <div>{`pitch: ${pitch} semitones`}</div>
+                </>
+            )}
+        </div>
+    );
 };
 
 export default WaveformBreakResult;
