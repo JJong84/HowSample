@@ -13,6 +13,8 @@ interface SampleData {
     id: UUIDTypes;
 }
 
+type ColorMap = Record<string, string>; // sampleId, color
+
 // sampled - sampled music to find
 // target - music which used sampling
 // user - user uploaded source to make music
@@ -71,4 +73,5 @@ export type {
     WaveformHandle,
     BreakResponse,
     MockUpSample,
+    ColorMap,
 };

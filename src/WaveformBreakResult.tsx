@@ -15,6 +15,7 @@ interface Props {
     setStartedTime: React.Dispatch<React.SetStateAction<number | null>>;
     playingId: string;
     setPlayingId: React.Dispatch<React.SetStateAction<string>>;
+    color?: string;
 }
 
 const WaveformBreakResult = ({
@@ -30,6 +31,7 @@ const WaveformBreakResult = ({
     pitch,
     startedTime,
     setStartedTime,
+    color = 'rgba(0, 0, 0, 0.8)',
 }: Props) => {
     const { start: startPoint, end: endPoint } = currentRange;
 
@@ -122,11 +124,11 @@ const WaveformBreakResult = ({
         canvasContext.clearRect(0, 0, WIDTH, HEIGHT);
 
         // Clear
-        canvasContext.fillStyle = 'rgba(0, 0, 0, 0.2)';
+        canvasContext.fillStyle = 'rgba(0, 0, 0, 0.0)';
         canvasContext.fillRect(0, 0, WIDTH, HEIGHT);
 
         // Draw waveform
-        canvasContext.strokeStyle = 'rgba(0, 0, 0, 0.8)';
+        canvasContext.strokeStyle = color;
         waveform.forEach((point, i) => {
             const x = i;
             const yMin = ((1 + point.min) / 2) * HEIGHT;
@@ -139,7 +141,12 @@ const WaveformBreakResult = ({
         });
     };
 
-    const handleStop = () => {
+    const handleStop = (isEndByTime: boolean) => {
+        if (isEndByTime) {
+            setSoundSource(null);
+            setStartedTime(null);
+            setPlayingId('');
+        }
         soundSource?.disconnect();
     };
 
@@ -163,12 +170,19 @@ const WaveformBreakResult = ({
         source.start(0, startPoint, endPoint - startPoint);
 
         source.addEventListener('ended', () => {
-            handleStop();
+            let isEndByTime = false;
+            console.log(startedTime, source.buffer, audioContext.currentTime);
+            if (startedTime && source.buffer) {
+                const elapsedTime = audioContext.currentTime - startedTime;
+                isEndByTime = elapsedTime >= source.buffer.duration;
+            }
+            handleStop(isEndByTime);
         });
 
         setStartedTime(audioContext.currentTime);
         setSoundSource(source);
         setPlayingId(id);
+
         return source;
     };
 

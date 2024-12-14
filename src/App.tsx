@@ -5,7 +5,7 @@ import SamplingMode from './SamplingMode';
 import SampleBreakMode from './SampleBreakMode';
 import { AddSourceModalProvider } from './useAddSourceModal';
 import AddSourceModal from './AddSourceModal';
-import { FormControlLabel, Switch } from '@mui/material';
+import { FormControlLabel, Switch, Typography } from '@mui/material';
 import { v4 } from 'uuid';
 
 function App() {
@@ -30,7 +30,9 @@ function App() {
         <AudioContextProvider>
             <AddSourceModalProvider>
                 <header className="header">
-                    <h1>How Sample?</h1>
+                    <Typography variant="h3" sx={{ marginBottom: 2 }}>
+                        How Sample?
+                    </Typography>
                     <FormControlLabel
                         control={
                             <Switch

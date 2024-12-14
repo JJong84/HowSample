@@ -50,8 +50,6 @@ const WaveForm = forwardRef<WaveformHandle, Props>(({ data, pixelPerSecond }: Pr
             const translateX = transformMatch ? parseFloat(transformMatch[1]) : 0;
             const left = leftMatch ? parseFloat(leftMatch[1]) : 0;
 
-            console.log(translateX, left);
-
             progressLineRef.current.style.left = `${left + translateX}px`;
             progressLineRef.current.style.transform = '';
             setStartedTime(audioContext.currentTime);
@@ -243,7 +241,6 @@ const WaveForm = forwardRef<WaveformHandle, Props>(({ data, pixelPerSecond }: Pr
         if (dragStartX !== null && !isFixed) {
             const currentX = event.nativeEvent.offsetX;
             setDragEndX(currentX);
-            console.log(currentX);
         }
     };
 

@@ -26,7 +26,7 @@ const AddSourceModal = ({ setSources }: AddSourceModalProps) => {
     const waveFormRef = useRef<WaveformHandle>(null);
     const containerRef = useRef<HTMLDivElement>(null);
 
-    const [pixelPerSecond, setPixelPerSecond] = useState(10);
+    const [pixelPerSecond, setPixelPerSecond] = useState(50);
 
     if (!source) return null;
 

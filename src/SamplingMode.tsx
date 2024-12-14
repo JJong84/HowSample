@@ -21,6 +21,7 @@ import {
 import './style/sampling.css';
 import { OneMoreTime } from './MockData';
 import { makeSampleDataFromPublicFile } from './Helpers';
+import WaveformPreview from './WaveformPreview';
 
 interface SamplingModeProps {
     selectedFiles: UploadedMusic[];
@@ -68,8 +69,22 @@ const SamplingMode = ({
         openModal(source, false);
     };
 
-    const handleDragStart = (source: SampleData) => {
+    const handleDragStart = (e: React.DragEvent<HTMLDivElement>, source: SampleData) => {
         setDraggedAudioSource(source);
+
+        const transparentPixel = document.createElement('div');
+        transparentPixel.style.width = '1px';
+        transparentPixel.style.height = '1px';
+        transparentPixel.style.backgroundColor = 'transparent';
+
+        // ghost UI로 투명 이미지 설정
+        document.body.appendChild(transparentPixel);
+        e.dataTransfer.setDragImage(transparentPixel, 0, 0);
+
+        // Drag 종료 후 정리
+        // e.dataTransfer.addEventListener("dragend", () => {
+        //   document.body.removeChild(transparentPixel);
+        // });
     };
 
     const handleDrop = (droppedPosition: number, id: UUIDTypes) => {
@@ -255,17 +270,17 @@ const SamplingMode = ({
             <Button onClick={handleResetClick}>Reset</Button>
             <Button onClick={handlePlayClick}>Play</Button>
             <div className="lines-container">
-                <div className="progress-line" ref={progressLineRef} />
+                <div className="progress-line-total" ref={progressLineRef} />
                 {lines.map((li) => (
                     <SamplingLine
                         key={v4()}
                         id={li.id}
-                        onDragOver={(e) => e.preventDefault()}
                         onDrop={handleDrop}
                         line={li}
                         pixelPerSecond={PIXEL_PER_SECOND}
                         totalTime={TOTAL_TIME}
                         sources={sources}
+                        draggedSource={draggedAudioSource}
                     />
                 ))}
             </div>
@@ -285,7 +300,7 @@ const SamplingMode = ({
                     <Table>
                         <TableHead>
                             <TableRow>
-                                <TableCell></TableCell>
+                                <TableCell>Preview</TableCell>
                                 <TableCell>Name</TableCell>
                                 <TableCell>Speed</TableCell>
                                 <TableCell>Pitch</TableCell>
@@ -293,23 +308,25 @@ const SamplingMode = ({
                                 <TableCell>End Point</TableCell>
                             </TableRow>
                         </TableHead>
-                        <TableBody>
+                        <TableBody sx={{ overflowY: 'auto' }}>
                             {sources.map((source) => (
                                 <TableRow
                                     key={`${source.id.toString()}${source.startPoint}${source.endPoint}`}
                                     onClick={() => handleSourceClick(source)}
                                 >
-                                    <TableCell>
+                                    <TableCell width={30}>
                                         <div
                                             draggable
-                                            onDragStart={() => handleDragStart(source)}
+                                            onDragStart={(e) => handleDragStart(e, source)}
                                             style={{
                                                 cursor: 'grab',
-                                                color: 'blue',
-                                                textDecoration: 'underline',
+                                                color: 'black',
                                             }}
                                         >
-                                            Drag Here
+                                            <WaveformPreview
+                                                data={source}
+                                                pixelPerSecond={PIXEL_PER_SECOND}
+                                            />
                                         </div>
                                     </TableCell>
                                     <TableCell>{source.name}</TableCell>

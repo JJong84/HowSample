@@ -1,8 +1,9 @@
-import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import { SampleData, WaveformHandle } from './Type';
 import { useAudioContext } from './useAudioContext';
 import { UUIDTypes } from 'uuid';
 import { useAddSourceModal } from './useAddSourceModal';
+import { stringToColor } from './Helpers';
 
 interface Props {
     data: SampleData;
@@ -32,6 +33,10 @@ const WaveForm = forwardRef<WaveformHandle, Props>(({ data, pixelPerSecond }: Pr
         changePitch,
     }));
 
+    const color = useMemo(() => {
+        return stringToColor(data.id as string);
+    }, [data.id]);
+
     useEffect(() => {
         setPitchAndSpeed();
     }, [speed, pitch]);
@@ -41,7 +46,6 @@ const WaveForm = forwardRef<WaveformHandle, Props>(({ data, pixelPerSecond }: Pr
         if (!canvas) return;
 
         const canvasWidth = Math.ceil(((endPoint - startPoint) * pixelPerSecond) / speed);
-        console.log(canvasWidth);
         canvas.width = canvasWidth;
         canvas.style.width = `${canvasWidth}px`;
 
@@ -81,11 +85,11 @@ const WaveForm = forwardRef<WaveformHandle, Props>(({ data, pixelPerSecond }: Pr
         canvasContext.clearRect(0, 0, WIDTH, HEIGHT);
 
         // Clear
-        canvasContext.fillStyle = 'rgba(256, 256, 256, 0.2)';
+        canvasContext.fillStyle = 'rgba(256, 256, 256, 0.1)';
         canvasContext.fillRect(0, 0, WIDTH, HEIGHT);
 
         // Draw waveform
-        canvasContext.strokeStyle = 'rgba(256, 256, 256, 0.8)';
+        canvasContext.strokeStyle = color;
         waveform.forEach((point, i) => {
             const x = i;
             const yMin = ((1 + point.min) / 2) * HEIGHT;

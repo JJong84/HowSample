@@ -70,4 +70,20 @@ const makeSampleDataFromPublicFile = (
 
 const publicUrl = import.meta.env.BASE_URL;
 
-export { makeSampleData, makeSampleDataFromPublicFile, publicUrl };
+const stringToColor = (str: string) => {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    // Hue 값 생성 (0 ~ 360)
+    const h = Math.abs(hash % 360);
+
+    // Saturation, Lightness 값을 조정하여 무채색 방지
+    const s = 60 + (Math.abs(hash) % 40); // Saturation: 60% ~ 100%
+    const l = 40 + (Math.abs(hash) % 30); // Lightness: 40% ~ 70%
+
+    return `hsl(${h}, ${s}%, ${l}%)`;
+};
+
+export { makeSampleData, makeSampleDataFromPublicFile, publicUrl, stringToColor };

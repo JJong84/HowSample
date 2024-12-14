@@ -21,6 +21,7 @@
 }
 
 .progress-line {
+    visibility: hidden;
     position: absolute;
     border: 1px solid red;
     height: 100%;

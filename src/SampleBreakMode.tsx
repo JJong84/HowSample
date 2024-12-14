@@ -1,11 +1,18 @@
-import { Line, SampleData, SampleLine, BreakResponse, UploadedMusic, SampleRange } from './Type';
+import {
+    Line,
+    SampleData,
+    SampleLine,
+    BreakResponse,
+    UploadedMusic,
+    SampleRange,
+} from './Type';
 import MusicInput from './MusicInput';
 import Waveform from './Waveform';
 import './style/sample-break.css';
-import { Button } from '@mui/material';
+import { Box, Button, Typography, Grid2 as Grid } from '@mui/material';
 import { KanYe } from './MockData';
 import { v4 } from 'uuid';
-import { useMemo, useState } from 'react';
+import { Fragment, useMemo, useState } from 'react';
 import WaveformBreakResult from './WaveformBreakResult';
 import { makeSampleDataFromPublicFile } from './Helpers';
 import { useAudioContext } from './useAudioContext';
@@ -138,7 +145,9 @@ const SampleBreakMode = ({
         <>
             {targetSource.length > 0 && (
                 <>
-                    <div>Break Result</div>
+                    <Typography variant="h4" sx={{ marginBottom: 2 }}>
+                        Break Result
+                    </Typography>
                     <div className="waveform-container-total-target">
                         <Waveform
                             playingId={playingId}
@@ -156,58 +165,132 @@ const SampleBreakMode = ({
             )}
             {targetSource.length > 0 && (
                 <>
-                    <div>Matches</div>
-                    {sampledSources.map((sm, i) =>
-                        breakResult.map(({ sampleId, original, target, speed, pitch }) => (
-                            <div key={sampleId as string} className="wave-results-container">
-                                <WaveformBreakResult
-                                    playingId={playingId}
-                                    setPlayingId={setPlayingId}
-                                    startedTime={startedTime}
-                                    setStartedTime={setStartedTime}
-                                    soundSource={soundSource}
-                                    setSoundSource={setSoundSource}
-                                    id={`${sampleId}-target`}
-                                    data={targetSource[0]}
-                                    pixelPerSecond={pixelPerSeconds[i]}
-                                    currentRange={target}
-                                    speed={1.0}
-                                    pitch={0}
-                                />
-                                <WaveformBreakResult
-                                    playingId={playingId}
-                                    setPlayingId={setPlayingId}
-                                    startedTime={startedTime}
-                                    setStartedTime={setStartedTime}
-                                    soundSource={soundSource}
-                                    setSoundSource={setSoundSource}
-                                    id={`${sampleId}-original`}
-                                    data={sm}
-                                    pixelPerSecond={pixelPerSeconds[i]}
-                                    currentRange={original}
-                                    speed={1.0}
-                                    pitch={0}
-                                />
-                                <WaveformBreakResult
-                                    playingId={playingId}
-                                    setPlayingId={setPlayingId}
-                                    startedTime={startedTime}
-                                    setStartedTime={setStartedTime}
-                                    soundSource={soundSource}
-                                    setSoundSource={setSoundSource}
-                                    id={`${sampleId}-original-modified`}
-                                    data={sm}
-                                    pixelPerSecond={pixelPerSeconds[i]}
-                                    currentRange={original}
-                                    speed={speed}
-                                    pitch={pitch}
-                                />
-                                <div>{formatRange(original)}</div>
-                                <div>{`speed: ${speed.toFixed(2)}x`}</div>
-                                <div>{`pitch: ${pitch} semitones`}</div>
-                            </div>
-                        )),
-                    )}
+                    <Typography variant="h4" sx={{ marginTop: 4, marginBottom: 2 }}>
+                        Matches
+                    </Typography>
+                    <Grid
+                        container
+                        spacing={2}
+                        sx={{ alignItems: 'stretch', paddingBottom: 6 }}
+                        columns={10}
+                    >
+                        {/* 헤더 (제목) */}
+                        <Grid size={3}>
+                            <Typography variant="subtitle1" fontWeight="bold">
+                                Target
+                            </Typography>
+                        </Grid>
+                        <Grid size={3}>
+                            <Typography variant="subtitle1" fontWeight="bold">
+                                Original Song
+                            </Typography>
+                        </Grid>
+                        <Grid size={4}>
+                            <Typography variant="subtitle1" fontWeight="bold">
+                                Processed
+                            </Typography>
+                        </Grid>
+
+                        {/* 본 내용 */}
+                        {sampledSources.map((sm, i) =>
+                            breakResult.map(({ sampleId, original, target, speed, pitch }) => (
+                                <Fragment key={sampleId as string}>
+                                    {/* Target */}
+                                    <Grid size={3}>
+                                        <Box
+                                            sx={{
+                                                paddingTop: 2,
+                                            }}
+                                        >
+                                            <WaveformBreakResult
+                                                playingId={playingId}
+                                                setPlayingId={setPlayingId}
+                                                startedTime={startedTime}
+                                                setStartedTime={setStartedTime}
+                                                soundSource={soundSource}
+                                                setSoundSource={setSoundSource}
+                                                id={`${sampleId}-target`}
+                                                data={targetSource[0]}
+                                                pixelPerSecond={pixelPerSeconds[i]}
+                                                currentRange={target}
+                                                speed={1.0}
+                                                pitch={0}
+                                                color="#E57373"
+                                            />
+                                        </Box>
+                                    </Grid>
+
+                                    {/* Original Song */}
+                                    <Grid size={3}>
+                                        <Box
+                                            sx={{
+                                                paddingTop: 2,
+                                            }}
+                                        >
+                                            <WaveformBreakResult
+                                                playingId={playingId}
+                                                setPlayingId={setPlayingId}
+                                                startedTime={startedTime}
+                                                setStartedTime={setStartedTime}
+                                                soundSource={soundSource}
+                                                setSoundSource={setSoundSource}
+                                                id={`${sampleId}-original`}
+                                                data={sm}
+                                                pixelPerSecond={pixelPerSeconds[i]}
+                                                currentRange={original}
+                                                speed={1.0}
+                                                pitch={0}
+                                                color="#81C784"
+                                            />
+                                        </Box>
+                                    </Grid>
+
+                                    {/* Processed */}
+                                    <Grid size="auto">
+                                        <Box
+                                            sx={{
+                                                paddingTop: 2,
+                                            }}
+                                        >
+                                            <WaveformBreakResult
+                                                playingId={playingId}
+                                                setPlayingId={setPlayingId}
+                                                startedTime={startedTime}
+                                                setStartedTime={setStartedTime}
+                                                soundSource={soundSource}
+                                                setSoundSource={setSoundSource}
+                                                id={`${sampleId}-original-modified`}
+                                                data={sm}
+                                                pixelPerSecond={pixelPerSeconds[i]}
+                                                currentRange={original}
+                                                speed={speed}
+                                                pitch={pitch}
+                                                color="rgb(0, 0, 256)"
+                                            />
+                                        </Box>
+                                    </Grid>
+
+                                    {/* Information */}
+                                    <Grid size="auto">
+                                        <Box
+                                            sx={{
+                                                paddingTop: 2,
+                                                paddingLeft: 3,
+                                            }}
+                                        >
+                                            <Typography variant="body2">
+                                                {formatRange(original)}
+                                            </Typography>
+                                            <Typography variant="body2">{`speed: ${speed.toFixed(
+                                                2,
+                                            )}x`}</Typography>
+                                            <Typography variant="body2">{`pitch: ${pitch} semitones`}</Typography>
+                                        </Box>
+                                    </Grid>
+                                </Fragment>
+                            )),
+                        )}
+                    </Grid>
                 </>
             )}
             <MusicInput
