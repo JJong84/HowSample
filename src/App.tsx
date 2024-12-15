@@ -16,13 +16,13 @@ function App() {
     const [sources, setSources] = useState<SampleData[]>([]);
     const [lines, setLines] = useState<Line[]>([{ id: v4(), sampleLines: [] }]);
 
-    const [mode, setMode] = useState<'sampling' | 'break'>('break');
+    const [mode, setMode] = useState<'sampler' | 'breakdown'>('breakdown');
 
     const handleToggleClick = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.checked) {
-            setMode('break');
+            setMode('breakdown');
         } else {
-            setMode('sampling');
+            setMode('sampler');
         }
     };
 
@@ -36,16 +36,21 @@ function App() {
                     <FormControlLabel
                         control={
                             <Switch
-                                checked={mode == 'break'}
+                                checked={mode == 'breakdown'}
                                 onChange={handleToggleClick}
                                 inputProps={{ 'aria-label': 'controlled' }}
                             />
                         }
                         label={`${mode} mode`}
+                        sx={{
+                            '& .MuiFormControlLabel-label': {
+                                textTransform: 'capitalize',
+                            },
+                        }}
                     />
                 </header>
                 <div className="main">
-                    {mode == 'sampling' ? (
+                    {mode == 'sampler' ? (
                         <SamplingMode
                             selectedFiles={userMusic}
                             setSelectedFiles={setUserMusic}

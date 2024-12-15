@@ -1,11 +1,4 @@
-import {
-    Line,
-    SampleData,
-    SampleLine,
-    BreakResponse,
-    UploadedMusic,
-    SampleRange,
-} from './Type';
+import { Line, SampleData, SampleLine, BreakResponse, UploadedMusic, SampleRange } from './Type';
 import MusicInput from './MusicInput';
 import Waveform from './Waveform';
 import './style/sample-break.css';
@@ -159,6 +152,7 @@ const SampleBreakMode = ({
                             id={targetSource[0].id as string}
                             data={targetSource[0]}
                             ranges={targetRanges}
+                            color="#BFBFBF"
                         />
                     </div>
                 </>
@@ -265,7 +259,7 @@ const SampleBreakMode = ({
                                                 currentRange={original}
                                                 speed={speed}
                                                 pitch={pitch}
-                                                color="rgb(0, 0, 256)"
+                                                color="#64B5F6"
                                             />
                                         </Box>
                                     </Grid>

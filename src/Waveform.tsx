@@ -12,6 +12,7 @@ interface Props {
     setStartedTime: React.Dispatch<React.SetStateAction<number | null>>;
     playingId: string;
     setPlayingId: React.Dispatch<React.SetStateAction<string>>;
+    color?: string;
 }
 
 const Waveform = ({
@@ -24,6 +25,7 @@ const Waveform = ({
     setStartedTime,
     soundSource,
     setSoundSource,
+    color = 'rgba(0, 0, 0, 0.8)',
 }: Props) => {
     //TODO: Remove speed pitch
     const [speed] = useState(1.0);
@@ -49,7 +51,7 @@ const Waveform = ({
     }, [speed, pitch]);
 
     useEffect(() => {
-        if (startedTime && progressLineRef.current) {
+        if (startedTime != null && progressLineRef.current) {
             const transformMatch =
                 progressLineRef.current.style.transform.match(/translateX\(([-\d.]+)px\)/);
             const leftMatch = progressLineRef.current.style.left.match(/([-\d.]+)px/);
@@ -66,7 +68,7 @@ const Waveform = ({
     useEffect(() => {
         let animationFrameId: number;
 
-        if (playingId == id && startedTime && progressLineRef.current) {
+        if (playingId == id && startedTime != null && progressLineRef.current) {
             progressLineRef.current.style.visibility = 'visible';
         } else if (progressLineRef.current) {
             progressLineRef.current.style.left = `${data.startPoint * pixelPerSecond}px`;
@@ -74,7 +76,7 @@ const Waveform = ({
         }
 
         const updateAnimation = () => {
-            if (startedTime && progressLineRef.current) {
+            if (playingId == id && startedTime != null && progressLineRef.current) {
                 // Calculate translateX based on AudioContext's currentTime
                 const translateX =
                     (audioContext.currentTime - startedTime) * pixelPerSecond * speed;
@@ -143,11 +145,11 @@ const Waveform = ({
         canvasContext.clearRect(0, 0, WIDTH, HEIGHT);
 
         // Clear
-        canvasContext.fillStyle = 'rgba(0, 0, 0, 0.2)';
+        canvasContext.fillStyle = 'rgba(0, 0, 0, 0.0)';
         canvasContext.fillRect(0, 0, WIDTH, HEIGHT);
 
         // Draw waveform
-        canvasContext.strokeStyle = 'rgba(0, 0, 0, 0.8)';
+        canvasContext.strokeStyle = color;
         waveform.forEach((point, i) => {
             const x = i;
             const yMin = ((1 + point.min) / 2) * HEIGHT;
