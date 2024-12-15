@@ -104,6 +104,18 @@ const WaveForm = forwardRef<WaveformHandle, Props>(({ data, pixelPerSecond }: Pr
             setDragStartX(startPoint * pixelPerSecond);
             setDragEndX(endPoint * pixelPerSecond);
             setIsFixed(true);
+
+            if (!dragRef.current) {
+                return;
+            }
+
+            const parentElement = dragRef.current.parentElement;
+            if (parentElement) {
+                const centerX = ((startPoint + endPoint) * pixelPerSecond) / 2;
+                const visibleWidth = parentElement.clientWidth;
+                const scrollLeft = Math.max(centerX - visibleWidth / 2, 0);
+                parentElement.scrollLeft = scrollLeft;
+            }
         }
     }, [pixelPerSecond]);
 
@@ -149,7 +161,7 @@ const WaveForm = forwardRef<WaveformHandle, Props>(({ data, pixelPerSecond }: Pr
         canvasContext.clearRect(0, 0, WIDTH, HEIGHT);
 
         // Clear
-        canvasContext.fillStyle = 'rgba(0, 0, 0, 0.2)';
+        canvasContext.fillStyle = 'rgba(0, 0, 0, 0)';
         canvasContext.fillRect(0, 0, WIDTH, HEIGHT);
 
         // Draw waveform
@@ -263,9 +275,24 @@ const WaveForm = forwardRef<WaveformHandle, Props>(({ data, pixelPerSecond }: Pr
         }
     };
 
+    const makeRange = () => {
+        const multiples = [];
+        for (let i = 5; i <= audioBuffer.duration; i += 5) {
+            multiples.push(i);
+        }
+        return multiples;
+    };
+
     return (
         <>
             <div ref={progressLineRef} className="progress-line" />
+            <div className="time-line">
+                {makeRange().map((i) => (
+                    <span className="time-line-number" style={{ left: i * pixelPerSecond }}>
+                        {i}
+                    </span>
+                ))}
+            </div>
             <div
                 ref={dragRef}
                 className="drag"

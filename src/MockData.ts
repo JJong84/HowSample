@@ -6,13 +6,13 @@ const KanYe: BreakResponse = [
         pitch: 4,
         target: {
             start: 0.0,
-            end: 34.58
+            end: 34.58,
         },
         original: {
             start: 193.41833050417105,
-            end: 237.42606032712425
-        }
-    }
+            end: 237.42606032712425,
+        },
+    },
 ];
 
 const OneMoreTime: MockUpSample[] = [

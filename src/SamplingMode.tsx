@@ -176,7 +176,7 @@ const SamplingMode = ({
 
     const progressLineRef = useRef<HTMLDivElement>(null);
 
-    const TOTAL_TIME = 60; //seconds
+    const TOTAL_TIME = 120; //seconds
     const PIXEL_PER_SECOND = 28;
 
     useEffect(() => {
@@ -262,6 +262,14 @@ const SamplingMode = ({
         ]);
     };
 
+    const makeRange = () => {
+        const multiples = [];
+        for (let i = 5; i <= TOTAL_TIME; i += 5) {
+            multiples.push(i);
+        }
+        return multiples;
+    };
+
     return (
         <>
             <Button onClick={handleLoadDemoClick}>Load Demo</Button>
@@ -269,6 +277,13 @@ const SamplingMode = ({
             <Button onClick={handlePlayClick}>Play</Button>
             <div className="lines-container">
                 <div className="progress-line-total" ref={progressLineRef} />
+                <div className="time-line">
+                    {makeRange().map((i) => (
+                        <span className="time-line-number" style={{ left: i * PIXEL_PER_SECOND }}>
+                            {i}
+                        </span>
+                    ))}
+                </div>
                 {lines.map((li) => (
                     <SamplingLine
                         key={v4()}

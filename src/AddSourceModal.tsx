@@ -126,12 +126,14 @@ const AddSourceModal = ({ setSources }: AddSourceModalProps) => {
                     ref={containerRef}
                     sx={{
                         width: '100%',
-                        height: '100px',
+                        height: '134px',
                         border: '1px solid black',
+                        paddingBottom: '24px',
                         marginBottom: '20px',
                         overflowY: 'hidden',
                         overflowX: 'auto',
                         position: 'relative',
+                        backgroundColor: 'rgba(0, 0, 0, 0.2)',
                     }}
                 >
                     {source && (

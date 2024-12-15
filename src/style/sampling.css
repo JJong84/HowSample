@@ -14,7 +14,7 @@
 .line {
     position: relative;
     height: 80px;
-    outline: 1px solid white;
+    outline: 1px solid #666666;
     display: flex;
 }
 
@@ -46,6 +46,21 @@
     border: 1px solid red;
     height: 100%;
     z-index: 99;
+}
+
+.time-line {
+    position: relative;
+    color: #666666;
+    height: 24px;
+    display: flex;
+}
+
+.time-line-number {
+    text-align: center;
+    align-self: center;
+    position: absolute;
+    transform: translateX(-50%);
+    font-size: 14px;
 }
 
 .drag {
