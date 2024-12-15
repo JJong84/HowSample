@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { AudioContextProvider } from './useAudioContext';
-import { Line, SampleData, UploadedMusic } from './Type';
+import { BreakResponse, Line, SampleData, UploadedMusic } from './Type';
 import SamplingMode from './SamplingMode';
 import SampleBreakMode from './SampleBreakMode';
 import { AddSourceModalProvider } from './useAddSourceModal';
@@ -15,6 +15,7 @@ function App() {
     const [userMusic, setUserMusic] = useState<UploadedMusic[]>([]);
     const [sources, setSources] = useState<SampleData[]>([]);
     const [lines, setLines] = useState<Line[]>([{ id: v4(), sampleLines: [] }]);
+    const [breakResult, setBreakResult] = useState<BreakResponse>([]);
 
     const [mode, setMode] = useState<'sampler' | 'breakdown'>('breakdown');
 
@@ -68,6 +69,8 @@ function App() {
                             sources={sources}
                             setSources={setSources}
                             setLines={setLines}
+                            breakResult={breakResult}
+                            setBreakResult={setBreakResult}
                         />
                     )}
                 </div>

@@ -18,6 +18,8 @@ interface SampleBreakModeProps {
     sources: SampleData[];
     setSources: React.Dispatch<React.SetStateAction<SampleData[]>>;
     setLines: React.Dispatch<React.SetStateAction<Line[]>>;
+    breakResult: BreakResponse;
+    setBreakResult: React.Dispatch<React.SetStateAction<BreakResponse>>;
 }
 
 //TODO: sampledSources => 1개로 고정해야함 (현재는 1개라는 가정)
@@ -29,10 +31,11 @@ const SampleBreakMode = ({
     setTargetMusic,
     sampledMusic,
     setSampledMusic,
+    breakResult,
+    setBreakResult,
 }: SampleBreakModeProps) => {
     const targetSource = sources.filter(({ type }) => type == 'target');
     const sampledSources = sources.filter(({ type }) => type == 'sampled');
-    const [breakResult, setBreakResult] = useState<BreakResponse>([]);
 
     // Global Sound Buffer Node
     const [soundSource, setSoundSource] = useState<AudioBufferSourceNode | null>(null);
