@@ -129,7 +129,6 @@ const SampleBreakMode = ({
         return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
     };
 
-    // 범위를 "분:초 - 분:초"로 변환
     const formatRange = (currentRange: SampleRange): string => {
         return `${formatTime(currentRange.start)} - ${formatTime(currentRange.end)}`;
     };

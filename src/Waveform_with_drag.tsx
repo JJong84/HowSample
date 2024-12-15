@@ -79,7 +79,7 @@ const WaveForm = forwardRef<WaveformHandle, Props>(
             const channelData = audioBuffer.getChannelData(0);
             const totalSamples = channelData.length;
 
-            const pitchFactor = Math.pow(2, pitch / 12); // pitch를 반음 기준으로 변환
+            const pitchFactor = Math.pow(2, pitch / 12);
             const scaledSamples = totalSamples / pitchFactor;
 
             const WIDTH = waveformRef.current?.width;
@@ -117,10 +117,10 @@ const WaveForm = forwardRef<WaveformHandle, Props>(
             });
 
             if (isExpandable) {
-                // 핸들 그리기
+                // Handle
                 canvasContext.fillStyle = 'red';
-                canvasContext.fillRect(0 - handleWidth / 2, 0, handleWidth, HEIGHT); // 왼쪽 핸들
-                canvasContext.fillRect(WIDTH - handleWidth / 2, 0, handleWidth, HEIGHT); // 오른쪽 핸들
+                canvasContext.fillRect(0 - handleWidth / 2, 0, handleWidth, HEIGHT);
+                canvasContext.fillRect(WIDTH - handleWidth / 2, 0, handleWidth, HEIGHT);
             }
         };
 
@@ -212,18 +212,6 @@ const WaveForm = forwardRef<WaveformHandle, Props>(
             pitchFactorParam.value = Math.pow(2, pitch / 12) / speed;
             soundSource.playbackRate.value = speed;
         };
-
-        // const start = () => {
-        //     const source = audioContext.createBufferSource();
-        //     source.buffer = audioBuffer;
-        //     source.connect(audioContext.destination);
-        //     source.playbackRate.value = speed;
-        //     // // 보정
-        //     // const detuneValue = -1200 * Math.log2(speed);
-        //     // source.detune.value = -100;
-        //     source?.start(startPoint);
-        //     return source;
-        // }
 
         const changeSpeed = (value: number) => {
             setSpeed(value);

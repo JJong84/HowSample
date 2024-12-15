@@ -1,5 +1,3 @@
-// interface SamplingModeProps {
-
 import { Line, SampleData } from './Type';
 import { useMemo, useRef, useState } from 'react';
 import WaveForm from './Waveform_Line';

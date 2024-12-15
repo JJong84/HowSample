@@ -1,7 +1,6 @@
 import { createContext, useContext, useMemo } from 'react';
 import { publicUrl } from './Helpers';
 
-// AudioContext 생성 및 관리
 const AudioContextContext = createContext<{
     audioContext: AudioContext;
     createPitchShiftNode: (speed: number, pitch: number) => AudioWorkletNode;

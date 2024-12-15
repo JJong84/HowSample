@@ -18,6 +18,7 @@ type ColorMap = Record<string, string>; // sampleId, color
 // sampled - sampled music to find
 // target - music which used sampling
 // user - user uploaded source to make music
+// break_result - result of target break
 type UploadedMusicType = 'sampled' | 'user' | 'target' | 'break_result';
 
 interface UploadedMusic {

@@ -1,5 +1,3 @@
-// interface SamplingModeProps {
-
 import { Line, SampleData, UploadedMusic } from './Type';
 import MusicInput from './MusicInput';
 import { useAudioContext } from './useAudioContext';
@@ -77,7 +75,7 @@ const SamplingMode = ({
         transparentPixel.style.height = '1px';
         transparentPixel.style.backgroundColor = 'transparent';
 
-        // ghost UI로 투명 이미지 설정
+        // ghost UI
         document.body.appendChild(transparentPixel);
         e.dataTransfer.setDragImage(transparentPixel, 0, 0);
 

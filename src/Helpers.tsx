@@ -4,9 +4,9 @@ import { SampleData, UploadedMusicType } from './Type';
 const fileToArrayBuffer = (file: File) => {
     return new Promise((resolve: (value: ArrayBuffer) => void, reject) => {
         const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as ArrayBuffer); // 결과를 ArrayBuffer로 반환
-        reader.onerror = () => reject(reader.error); // 에러 처리
-        reader.readAsArrayBuffer(file); // 파일을 ArrayBuffer로 읽기
+        reader.onload = () => resolve(reader.result as ArrayBuffer);
+        reader.onerror = () => reject(reader.error);
+        reader.readAsArrayBuffer(file);
     });
 };
 
@@ -76,10 +76,8 @@ const stringToColor = (str: string) => {
         hash = str.charCodeAt(i) + ((hash << 5) - hash);
     }
 
-    // Hue 값 생성 (0 ~ 360)
+    // Hue: 0 ~ 360
     const h = Math.abs(hash % 360);
-
-    // Saturation, Lightness 값을 조정하여 무채색 방지
     const s = 60 + (Math.abs(hash) % 40); // Saturation: 60% ~ 100%
     const l = 40 + (Math.abs(hash) % 30); // Lightness: 40% ~ 70%
 

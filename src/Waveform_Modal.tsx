@@ -224,7 +224,7 @@ const WaveForm = forwardRef<WaveformHandle, Props>(({ data, pixelPerSecond }: Pr
     const setPitchAndSpeed = () => {
         const pitchFactorParam = pitchShiftNode?.parameters.get('pitchFactor');
         if (!pitchFactorParam || !soundSource) {
-            // console.log('no pitch factor or soudsource');
+            console.log('no pitch factor or soudsource');
             return;
         }
         pitchFactorParam.value = Math.pow(2, pitch / 12) / speed;

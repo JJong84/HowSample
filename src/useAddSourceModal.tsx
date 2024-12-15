@@ -14,7 +14,6 @@ interface AddSourceContextType {
     endPoint: number;
     setStartPoint: (value: number) => void;
     setEndPoint: (value: number) => void;
-    // apply: () => void;
     isEdit: boolean;
 }
 
@@ -58,7 +57,6 @@ export const AddSourceModalProvider: React.FC<{ children: React.ReactNode }> = (
                 setStartPoint,
                 endPoint,
                 setEndPoint,
-                // apply,
                 isEdit,
             }}
         >
