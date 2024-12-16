@@ -38,7 +38,12 @@ const SamplingMode = ({
     lines,
     setLines,
 }: SamplingModeProps) => {
-    const { audioContext, createPitchShiftNode } = useAudioContext();
+    const {
+        offlineAudioContext,
+        audioContext,
+        createPitchShiftNode,
+        createPitchShiftNodeForOffline,
+    } = useAudioContext();
     const { isModalOpen } = useAddSourceModal();
 
     const { openModal } = useAddSourceModal();
@@ -270,11 +275,106 @@ const SamplingMode = ({
         return multiples;
     };
 
+    const downloadSong = async () => {
+        lines.forEach((line) => {
+            line.sampleLines.forEach((sl) => {
+                const sourceNode = offlineAudioContext.createBufferSource();
+                const targetSource = sources.find((s) => s.id === sl.sampleDataId);
+                if (!targetSource) {
+                    return;
+                }
+                const { audioBuffer, speed, pitch, startPoint, endPoint } = targetSource;
+                sourceNode.buffer = audioBuffer;
+
+                const startTime = sl.startTime;
+
+                const gainNode = offlineAudioContext.createGain();
+                gainNode.gain.value = 1; // gain
+
+                const pitchShiftNode = createPitchShiftNodeForOffline();
+
+                const pitchFactorParam = pitchShiftNode?.parameters.get('pitchFactor');
+                if (!pitchFactorParam || !targetSource) {
+                    console.log('no pitch factor or soudsource');
+                    return;
+                }
+                pitchFactorParam.value = Math.pow(2, pitch / 12) / speed;
+                sourceNode.playbackRate.value = speed;
+
+                sourceNode.playbackRate.value = speed;
+                sourceNode
+                    .connect(pitchShiftNode)
+                    .connect(gainNode)
+                    .connect(offlineAudioContext.destination);
+                sourceNode.start(startTime, startPoint, endPoint - startPoint);
+            });
+        });
+
+        // 렌더링 시작
+        const renderedBuffer = await offlineAudioContext.startRendering();
+
+        // WAV 포맷으로 변환
+        const wavBlob = audioBufferToWav(renderedBuffer);
+
+        // 다운로드
+        const url = URL.createObjectURL(wavBlob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'output.wav';
+        a.click();
+        URL.revokeObjectURL(url);
+    };
+
+    // AudioBuffer를 WAV 포맷으로 변환
+    const audioBufferToWav = (buffer: AudioBuffer) => {
+        const numberOfChannels = buffer.numberOfChannels;
+        const length = buffer.length * numberOfChannels * 2 + 44;
+        const wav = new ArrayBuffer(length);
+        const view = new DataView(wav);
+
+        // Write WAV header
+        const writeString = (offset: number, str: string) => {
+            for (let i = 0; i < str.length; i++) {
+                view.setUint8(offset + i, str.charCodeAt(i));
+            }
+        };
+
+        writeString(0, 'RIFF');
+        view.setUint32(4, length - 8, true);
+        writeString(8, 'WAVE');
+        writeString(12, 'fmt ');
+        view.setUint32(16, 16, true);
+        view.setUint16(20, 1, true);
+        view.setUint16(22, numberOfChannels, true);
+        view.setUint32(24, buffer.sampleRate, true);
+        view.setUint32(28, buffer.sampleRate * 4, true);
+        view.setUint16(32, numberOfChannels * 2, true);
+        view.setUint16(34, 16, true);
+        writeString(36, 'data');
+        view.setUint32(40, length - 44, true);
+
+        // Write PCM samples
+        let offset = 44;
+        const interleaved = new Float32Array(buffer.length * numberOfChannels);
+        for (let i = 0; i < buffer.length; i++) {
+            for (let channel = 0; channel < numberOfChannels; channel++) {
+                interleaved[i * numberOfChannels + channel] = buffer.getChannelData(channel)[i];
+            }
+        }
+        for (let i = 0; i < interleaved.length; i++, offset += 2) {
+            const sample = Math.max(-1, Math.min(1, interleaved[i]));
+            view.setInt16(offset, sample < 0 ? sample * 0x8000 : sample * 0x7fff, true);
+        }
+
+        return new Blob([view], { type: 'audio/wav' });
+    };
+
     return (
         <>
             <Button onClick={handleLoadDemoClick}>Load Demo</Button>
             <Button onClick={handleResetClick}>Reset</Button>
             <Button onClick={handlePlayClick}>Play</Button>
+            <Button onClick={downloadSong}>Download Song</Button>
             <div className="lines-container">
                 <div className="progress-line-total" ref={progressLineRef} />
                 <div className="time-line">
