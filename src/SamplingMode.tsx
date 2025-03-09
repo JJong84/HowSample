@@ -372,7 +372,13 @@ const SamplingMode = ({
     return (
         <>
             <div>
-                <Button style={{marginBottom: 2}} variant="outlined" onClick={handleLoadDemoClick}>Load Demo</Button>
+                <Button
+                    style={{ marginBottom: 2 }}
+                    variant="outlined"
+                    onClick={handleLoadDemoClick}
+                >
+                    Load Demo
+                </Button>
             </div>
             <Button onClick={handleResetClick}>Reset</Button>
             <Button onClick={handlePlayClick}>Play</Button>
@@ -401,7 +407,16 @@ const SamplingMode = ({
             </div>
             <Button onClick={handleAddLineClick}>ADD Line</Button>
             <div>
-                <Typography variant="h5" sx={{ marginTop: 0.5, marginBottom: 1, display: 'flex', flexDirection: 'row', gap: 4 }}>
+                <Typography
+                    variant="h5"
+                    sx={{
+                        marginTop: 0.5,
+                        marginBottom: 1,
+                        display: 'flex',
+                        flexDirection: 'row',
+                        gap: 4,
+                    }}
+                >
                     Added Tracks
                     <MusicInput
                         setSources={setSources}
@@ -411,8 +426,7 @@ const SamplingMode = ({
                         buttonText="Upload Audio File"
                     />
                 </Typography>
-                {
-                    sources.length > 0 &&
+                {sources.length > 0 && (
                     <>
                         <Typography variant="h6" sx={{ marginBottom: 1 }}>
                             Drag and drop samples to create your own track.
@@ -432,7 +446,7 @@ const SamplingMode = ({
                                 <TableBody sx={{ overflowY: 'auto' }}>
                                     {sources.map((source) => (
                                         <TableRow
-                                            style={{cursor: 'pointer'}}
+                                            style={{ cursor: 'pointer' }}
                                             key={`${source.id.toString()}${source.startPoint}${source.endPoint}`}
                                             onClick={() => handleSourceClick(source)}
                                         >
@@ -462,7 +476,7 @@ const SamplingMode = ({
                             </Table>
                         </TableContainer>
                     </>
-                }
+                )}
             </div>
         </>
     );

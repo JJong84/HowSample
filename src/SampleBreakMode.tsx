@@ -1,5 +1,5 @@
 import { Line, SampleData, SampleLine, BreakResponse, UploadedMusic, SampleRange } from './Type';
-import MusicInput from './MusicInput';
+// import MusicInput from './MusicInput';
 import Waveform from './Waveform';
 import './style/sample-break.css';
 import { Box, Button, Typography, Grid2 as Grid } from '@mui/material';
@@ -11,10 +11,10 @@ import { makeSampleDataFromPublicFile } from './Helpers';
 import { useAudioContext } from './useAudioContext';
 
 interface SampleBreakModeProps {
-    targetMusic: UploadedMusic[];
-    setTargetMusic: React.Dispatch<React.SetStateAction<UploadedMusic[]>>;
-    sampledMusic: UploadedMusic[];
-    setSampledMusic: React.Dispatch<React.SetStateAction<UploadedMusic[]>>;
+    targetMusic?: UploadedMusic[];
+    setTargetMusic?: React.Dispatch<React.SetStateAction<UploadedMusic[]>>;
+    sampledMusic?: UploadedMusic[];
+    setSampledMusic?: React.Dispatch<React.SetStateAction<UploadedMusic[]>>;
     sources: SampleData[];
     setSources: React.Dispatch<React.SetStateAction<SampleData[]>>;
     setLines: React.Dispatch<React.SetStateAction<Line[]>>;
@@ -27,10 +27,10 @@ const SampleBreakMode = ({
     setLines,
     sources,
     setSources,
-    targetMusic,
-    setTargetMusic,
-    sampledMusic,
-    setSampledMusic,
+    // targetMusic,
+    // setTargetMusic,
+    // sampledMusic,
+    // setSampledMusic,
     breakResult,
     setBreakResult,
 }: SampleBreakModeProps) => {
@@ -97,7 +97,7 @@ const SampleBreakMode = ({
         ]);
     };
 
-    const handleAnalyzeClick = () => {};
+    // const handleAnalyzeClick = () => {};
 
     const targetRanges: SampleRange[] = useMemo(
         () =>

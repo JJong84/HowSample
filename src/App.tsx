@@ -46,7 +46,7 @@ function App() {
                         sx={{
                             '& .MuiFormControlLabel-label': {
                                 textTransform: 'capitalize',
-                                width: 130
+                                width: 130,
                             },
                         }}
                     />
