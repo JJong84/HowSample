@@ -371,7 +371,9 @@ const SamplingMode = ({
 
     return (
         <>
-            <Button onClick={handleLoadDemoClick}>Load Demo</Button>
+            <div>
+                <Button style={{marginBottom: 2}} variant="outlined" onClick={handleLoadDemoClick}>Load Demo</Button>
+            </div>
             <Button onClick={handleResetClick}>Reset</Button>
             <Button onClick={handlePlayClick}>Play</Button>
             <Button onClick={downloadSong}>Download Song</Button>
@@ -398,60 +400,69 @@ const SamplingMode = ({
                 ))}
             </div>
             <Button onClick={handleAddLineClick}>ADD Line</Button>
-            <MusicInput
-                setSources={setSources}
-                selectedFiles={selectedFiles}
-                setSelectedFiles={setSelectedFiles}
-                type="user"
-                buttonText="Select Audio File"
-            />
             <div>
-                <Typography variant="h6" sx={{ marginBottom: 2 }}>
+                <Typography variant="h5" sx={{ marginTop: 0.5, marginBottom: 1, display: 'flex', flexDirection: 'row', gap: 4 }}>
                     Added Tracks
+                    <MusicInput
+                        setSources={setSources}
+                        selectedFiles={selectedFiles}
+                        setSelectedFiles={setSelectedFiles}
+                        type="user"
+                        buttonText="Upload Audio File"
+                    />
                 </Typography>
-                <TableContainer component={Paper}>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>Preview</TableCell>
-                                <TableCell>Name</TableCell>
-                                <TableCell>Speed</TableCell>
-                                <TableCell>Pitch</TableCell>
-                                <TableCell>Start Point</TableCell>
-                                <TableCell>End Point</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody sx={{ overflowY: 'auto' }}>
-                            {sources.map((source) => (
-                                <TableRow
-                                    key={`${source.id.toString()}${source.startPoint}${source.endPoint}`}
-                                    onClick={() => handleSourceClick(source)}
-                                >
-                                    <TableCell width={30}>
-                                        <div
-                                            draggable
-                                            onDragStart={(e) => handleDragStart(e, source)}
-                                            style={{
-                                                cursor: 'grab',
-                                                color: 'black',
-                                            }}
+                {
+                    sources.length > 0 &&
+                    <>
+                        <Typography variant="h6" sx={{ marginBottom: 1 }}>
+                            Drag and drop samples to create your own track.
+                        </Typography>
+                        <TableContainer component={Paper}>
+                            <Table>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>Preview</TableCell>
+                                        <TableCell>Name</TableCell>
+                                        <TableCell>Speed</TableCell>
+                                        <TableCell>Pitch</TableCell>
+                                        <TableCell>Start Point</TableCell>
+                                        <TableCell>End Point</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody sx={{ overflowY: 'auto' }}>
+                                    {sources.map((source) => (
+                                        <TableRow
+                                            style={{cursor: 'pointer'}}
+                                            key={`${source.id.toString()}${source.startPoint}${source.endPoint}`}
+                                            onClick={() => handleSourceClick(source)}
                                         >
-                                            <WaveformPreview
-                                                data={source}
-                                                pixelPerSecond={PIXEL_PER_SECOND}
-                                            />
-                                        </div>
-                                    </TableCell>
-                                    <TableCell>{source.name}</TableCell>
-                                    <TableCell>{source.speed.toFixed(1)}x</TableCell>
-                                    <TableCell>{source.pitch} semitones</TableCell>
-                                    <TableCell>{source.startPoint.toFixed(3)} s</TableCell>
-                                    <TableCell>{source.endPoint.toFixed(3)} s</TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                                            <TableCell width={30}>
+                                                <div
+                                                    draggable
+                                                    onDragStart={(e) => handleDragStart(e, source)}
+                                                    style={{
+                                                        cursor: 'grab',
+                                                        color: 'black',
+                                                    }}
+                                                >
+                                                    <WaveformPreview
+                                                        data={source}
+                                                        pixelPerSecond={PIXEL_PER_SECOND}
+                                                    />
+                                                </div>
+                                            </TableCell>
+                                            <TableCell>{source.name}</TableCell>
+                                            <TableCell>{source.speed.toFixed(1)}x</TableCell>
+                                            <TableCell>{source.pitch} semitones</TableCell>
+                                            <TableCell>{source.startPoint.toFixed(3)} s</TableCell>
+                                            <TableCell>{source.endPoint.toFixed(3)} s</TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </>
+                }
             </div>
         </>
     );

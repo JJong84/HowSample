@@ -289,7 +289,7 @@ const SampleBreakMode = ({
                     </Grid>
                 </>
             )}
-            <MusicInput
+            {/* <MusicInput
                 setSources={setSources}
                 selectedFiles={targetMusic}
                 setSelectedFiles={setTargetMusic}
@@ -303,7 +303,7 @@ const SampleBreakMode = ({
                 setSelectedFiles={setSampledMusic}
                 type="sampled"
                 buttonText="Select Original Audio File"
-            />
+            /> */}
             <div>
                 <Button
                     variant="outlined"
@@ -312,13 +312,13 @@ const SampleBreakMode = ({
                 >
                     Load Demo
                 </Button>
-                <Button
+                {/* <Button
                     variant="outlined"
                     sx={{ marginRight: '20px' }}
                     onClick={handleAnalyzeClick}
                 >
                     Analyze
-                </Button>
+                </Button> */}
             </div>
         </>
     );
