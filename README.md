@@ -3,6 +3,8 @@ Website for Sampling Analysis and Editing
 
 Final Project for CTP431-KAIST
 
+You can also read this at [Project Page](https://jjong84.github.io/CTP431-Final/)
+
 ## Index
 
 1. [Introduction](#introduction)
@@ -40,7 +42,7 @@ The specific Breakdown process is explained at the following link:
 
 ### Web Interface
 
-![Breakdown Interface](/assets/images/break_result.jpeg)
+![Breakdown Interface](https://github.com/user-attachments/assets/30aae9c1-f300-415e-82a5-8b951a0cfbb2)
 
 ## Sampler Mode
 
@@ -62,9 +64,9 @@ For the demo, the application includes an example where the part of the **"Daft 
 
 ### Web Interface
 
-![Sampler Interface](/assets/images/sampler.jpeg)
+![Sampler Interface](https://github.com/user-attachments/assets/c65dac28-b5fa-4d89-b69a-36cfbfd9634c)
 
-![Sampler Modal Interface](/assets/images/sampler_modal.jpeg)
+![Sampler Modal Interface](https://github.com/user-attachments/assets/0b480ec3-7c05-48e8-ae49-82f571291706)
 
 ## Reference
 
