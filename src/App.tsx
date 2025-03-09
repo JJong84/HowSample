@@ -17,7 +17,7 @@ function App() {
     const [lines, setLines] = useState<Line[]>([{ id: v4(), sampleLines: [] }]);
     const [breakResult, setBreakResult] = useState<BreakResponse>([]);
 
-    const [mode, setMode] = useState<'sampler' | 'breakdown'>('breakdown');
+    const [mode, setMode] = useState<'sampler' | 'breakdown'>('sampler');
 
     const handleToggleClick = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.checked) {
@@ -46,6 +46,7 @@ function App() {
                         sx={{
                             '& .MuiFormControlLabel-label': {
                                 textTransform: 'capitalize',
+                                width: 130
                             },
                         }}
                     />
