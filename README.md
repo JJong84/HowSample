@@ -36,10 +36,6 @@ You can check the demo by pressing the **“LOAD DEMO”** button. For the demo,
 
 For the every waveforms in the breakdown result, you can easily click them to play them. The waveform shown at the top is the waveform of the **target song**. And the **blue colored part** is the analyzed segment. The analyzed segment is also shown as the **red colored waveform** below. The **green waveform** shows the sampled part of the target song. Its detailed time information is written at right side. Also, there are **time-stretch / pitch-shift information** too. By applying these effects with the analyzed factors, we can earn the blue waveform. You can check that the reproduced sample segment matches well with the target song. Also, you can check the analyzed samples are automatically loaded to the library at the sampler mode too.
 
-The specific Breakdown process is explained at the following link:
-
-[Google Colab Link](https://colab.research.google.com/drive/1B5A8QaD72YDuE8PHFNWZ3uCfZrzJbSHJ?usp=sharing)
-
 ### Web Interface
 
 ![Breakdown Interface](https://github.com/user-attachments/assets/30aae9c1-f300-415e-82a5-8b951a0cfbb2)
